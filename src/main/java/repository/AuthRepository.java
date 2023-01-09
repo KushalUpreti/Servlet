@@ -1,7 +1,7 @@
 package repository;
 
 import dto.UserDTO;
-import utils.JSONUtils;
+import utils.HTTPUtils;
 
 import java.sql.*;
 import java.util.Map;
@@ -20,20 +20,15 @@ public class AuthRepository {
         }
     }
 
-    public void register(UserDTO userDTO) {
-        try {
-            createConnection();
-            String sql = "Insert into users (email,password) VALUES (?, ?)";
-            PreparedStatement prepareStatement = connection.prepareStatement(sql);
-            String passwordHash = JSONUtils.encodePassword(userDTO.getPassword());
-            prepareStatement.setString(1, userDTO.getEmail());
-            prepareStatement.setString(2, passwordHash);
-            prepareStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            terminateConnection();
-        }
+    public void register(UserDTO userDTO) throws SQLException {
+        createConnection();
+        String sql = "Insert into users (email,password) VALUES (?, ?)";
+        PreparedStatement prepareStatement = connection.prepareStatement(sql);
+        String passwordHash = HTTPUtils.encodePassword(userDTO.getPassword());
+        prepareStatement.setString(1, userDTO.getEmail());
+        prepareStatement.setString(2, passwordHash);
+        prepareStatement.executeUpdate();
+        terminateConnection();
     }
 
     public UserDTO login(UserDTO userDTO) {
@@ -48,7 +43,7 @@ public class AuthRepository {
                 int id = resultSet.getInt("id");
                 String email = resultSet.getString("email");
                 String password = resultSet.getString("password");
-                user = new UserDTO(id,email,password);
+                user = new UserDTO(id, email, password);
             }
         } catch (SQLException e) {
             e.printStackTrace();

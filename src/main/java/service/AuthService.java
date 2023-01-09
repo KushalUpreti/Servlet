@@ -6,8 +6,10 @@ import dto.UserDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import repository.AuthRepository;
-import utils.JSONUtils;
+import utils.HTTPUtils;
 import utils.JWTUtils;
+
+import java.sql.SQLException;
 
 public class AuthService {
     private final Gson gson;
@@ -20,8 +22,8 @@ public class AuthService {
         this.jwtUtils = new JWTUtils();
     }
 
-    public void register(HttpServletRequest request) throws ServletException {
-        String requestBody = JSONUtils.jsonParser(request);
+    public void register(HttpServletRequest request) throws ServletException, SQLException {
+        String requestBody = HTTPUtils.jsonParser(request);
         UserDTO userDTO = gson.fromJson(requestBody, UserDTO.class);
         if (userDTO.getEmail().trim().equals("")
                 || userDTO.getPassword().trim().equals("")) {
@@ -31,7 +33,7 @@ public class AuthService {
     }
 
     public AuthResponseDTO login(HttpServletRequest request) throws ServletException {
-        String requestBody = JSONUtils.jsonParser(request);
+        String requestBody = HTTPUtils.jsonParser(request);
         UserDTO userDTO = gson.fromJson(requestBody, UserDTO.class);
         String password = userDTO.getPassword().trim();
         if (userDTO.getEmail().trim().equals("")
@@ -42,7 +44,7 @@ public class AuthService {
         if(user == null){
             throw new ServletException("User not found");
         }
-        boolean passwordMatch = JSONUtils.checkPasswordMatch(password,user.getPassword());
+        boolean passwordMatch = HTTPUtils.checkPasswordMatch(password,user.getPassword());
         if(!passwordMatch){
             throw new ServletException("Invalid credentials. Try again!");
         }

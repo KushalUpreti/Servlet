@@ -1,6 +1,5 @@
 package utils;
 
-import dto.UserDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -17,7 +16,7 @@ public class JWTUtils {
 
     SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    public String extractUsername(String token) {
+    public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -34,7 +33,7 @@ public class JWTUtils {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
-    private Boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
@@ -51,7 +50,7 @@ public class JWTUtils {
     }
 
     public Boolean isTokenValid(String token) {
-        final String username = extractUsername(token);
         return !isTokenExpired(token);
     }
+
 }

@@ -10,9 +10,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.AuthService;
+import utils.HTTPUtils;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 @WebServlet("/auth")
 public class AuthController extends HttpServlet {
@@ -43,22 +45,14 @@ public class AuthController extends HttpServlet {
                 response.getWriter().print(new Gson().toJson(authResponse));
 
             } catch (ServletException s) {
-                sendErrorResponse(response, 404, s.getMessage());
+                HTTPUtils.sendErrorResponse(response, 404, s.getMessage());
             }
         } else {
             try {
                 authService.register(request);
-            } catch (ServletException s) {
-                sendErrorResponse(response, 401, s.getMessage());
+            } catch (ServletException | SQLException s) {
+                HTTPUtils.sendErrorResponse(response, 401, s.getMessage());
             }
         }
-    }
-
-    private void sendErrorResponse(HttpServletResponse response, int status, String message) throws IOException {
-        ErrorResponseDTO err = new ErrorResponseDTO(status, message);
-        response.setStatus(status);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().print(new Gson().toJson(err));
     }
 }

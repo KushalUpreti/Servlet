@@ -1,17 +1,13 @@
 package repository;
 
-import dto.User;
+import dto.UserDTO;
+import utils.JSONUtils;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Arrays;
+import java.sql.*;
 import java.util.Map;
 
 public class AuthRepository {
     Connection connection;
-//    Crypto
 
     private void createConnection() {
         Map<String, String> env = System.getenv();
@@ -20,27 +16,46 @@ public class AuthRepository {
             connection =
                     DriverManager.getConnection("jdbc:mysql://localhost:3306/servlet", "root", env.get("MYSQL_PASS"));
         } catch (ClassNotFoundException | SQLException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 
-    public void register(User user) {
+    public void register(UserDTO userDTO) {
         try {
             createConnection();
-            String sql = "Insert into users (full_name, address, contact_number, gender) VALUES (?, ?, ?, ?)";
+            String sql = "Insert into users (email,password) VALUES (?, ?)";
             PreparedStatement prepareStatement = connection.prepareStatement(sql);
-            prepareStatement.setString(1, user.getEmail());
-            prepareStatement.setString(2, user.getPassword());
-            int isInserted = prepareStatement.executeUpdate();
-            if (isInserted == 1) {
-                System.out.println("Record added successfully.");
-            }
-        }catch (SQLException e){
-
-        }
-        finally {
+            String passwordHash = JSONUtils.encodePassword(userDTO.getPassword());
+            prepareStatement.setString(1, userDTO.getEmail());
+            prepareStatement.setString(2, passwordHash);
+            prepareStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
             terminateConnection();
         }
+    }
+
+    public UserDTO login(UserDTO userDTO) {
+        UserDTO user = null;
+        try {
+            createConnection();
+            String sql = "SELECT * FROM USERS WHERE email = ?";
+            PreparedStatement prepareStatement = connection.prepareStatement(sql);
+            prepareStatement.setString(1, userDTO.getEmail());
+            ResultSet resultSet = prepareStatement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String email = resultSet.getString("email");
+                String password = resultSet.getString("password");
+                user = new UserDTO(id,email,password);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            terminateConnection();
+        }
+        return user;
     }
 
     private void terminateConnection() {
@@ -48,9 +63,8 @@ public class AuthRepository {
             try {
                 connection.close();
             } catch (SQLException exception) {
-                System.out.println(Arrays.toString(exception.getStackTrace()));
+                exception.printStackTrace();
             }
-
         }
     }
 

@@ -2,13 +2,13 @@ package service;
 
 import com.google.gson.Gson;
 import dto.CategoryDTO;
-import dto.UserDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import repository.CategoryRepository;
-import utils.HTTPUtils;
+import util.HTTPUtils;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class CategoryService {
     private final CategoryRepository categoryRepository;
@@ -17,6 +17,10 @@ public class CategoryService {
     public CategoryService() {
         this.gson = new Gson();
         this.categoryRepository = new CategoryRepository();
+    }
+
+    public List<CategoryDTO> getAllCategories() throws SQLException {
+        return categoryRepository.getAllCategories();
     }
 
     public void addCategory(HttpServletRequest request) throws ServletException, SQLException {

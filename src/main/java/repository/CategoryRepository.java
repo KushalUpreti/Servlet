@@ -1,9 +1,10 @@
 package repository;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import dto.CategoryDTO;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class CategoryRepository {
@@ -18,6 +19,22 @@ public class CategoryRepository {
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<CategoryDTO> getAllCategories() throws SQLException {
+        createConnection();
+        String sql = "SELECT * FROM categories";
+        Statement stmt = connection.createStatement();
+        ResultSet resultSet = stmt.executeQuery(sql);
+
+        List<CategoryDTO> categories = new ArrayList<>();
+        while (resultSet.next()) {
+            int categoryId = resultSet.getInt(1);
+            String title = resultSet.getString(2);
+            categories.add(new CategoryDTO(categoryId, title));
+        }
+        terminateConnection();
+        return categories;
     }
 
     public void addCategory(String title) throws SQLException {

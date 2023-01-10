@@ -6,8 +6,8 @@ import dto.UserDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import repository.AuthRepository;
-import utils.HTTPUtils;
-import utils.JWTUtils;
+import util.HTTPUtils;
+import util.JWTUtils;
 
 import java.sql.SQLException;
 

@@ -4,9 +4,9 @@ import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import utils.Constants;
-import utils.HTTPUtils;
-import utils.JWTUtils;
+import util.Constants;
+import util.HTTPUtils;
+import util.JWTUtils;
 
 import java.io.IOException;
 

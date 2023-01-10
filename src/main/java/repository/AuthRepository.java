@@ -1,8 +1,8 @@
 package repository;
 
 import dto.UserDTO;
-import utils.Constants;
-import utils.HTTPUtils;
+import util.Constants;
+import util.HTTPUtils;
 
 import java.sql.*;
 

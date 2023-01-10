@@ -3,7 +3,6 @@ package controller;
 
 import com.google.gson.Gson;
 import dto.AuthResponseDTO;
-import dto.ErrorResponseDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -26,10 +25,7 @@ public class AuthController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String studentID = request.getParameter("id");
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
-        out.println("<h3>Hello World From Servlet</h3>");
+
     }
 
     @Override

@@ -3,9 +3,12 @@ package utils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +17,19 @@ import java.util.function.Function;
 
 public class JWTUtils {
 
-    SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
+    public SecretKey generalKey() {
+        byte[] encodedKey = new byte[0];
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-512");
+            encodedKey = digest.digest(Constants.env.get("JWT_SECRET_KEY").getBytes(StandardCharsets.UTF_8));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        SecretKey key = new SecretKeySpec(encodedKey, 0, encodedKey.length,
+                "HmacSHA512");
+        return key;
+    }
 
     public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -30,7 +45,7 @@ public class JWTUtils {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder().setSigningKey(generalKey()).build().parseClaimsJws(token).getBody();
     }
 
     public boolean isTokenExpired(String token) {
@@ -46,7 +61,7 @@ public class JWTUtils {
         return Jwts.builder().setClaims(claims).setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(24)))
-                .signWith(key, SignatureAlgorithm.HS256).compact();
+                .signWith(generalKey(), SignatureAlgorithm.HS256).compact();
     }
 
     public Boolean isTokenValid(String token) {

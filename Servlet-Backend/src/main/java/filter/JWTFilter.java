@@ -38,14 +38,14 @@ public class JWTFilter implements Filter {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
-
+        System.out.println(authHeader);
         if (authHeader == null || !authHeader.startsWith("Bearer")) {
             HTTPUtils.sendErrorResponse(response, 403, "Resource access denied");
             return;
         }
 
         jwtToken = authHeader.substring(7);
-
+        System.out.println(jwtToken);
         if (!jwtUtils.isTokenValid(jwtToken)) {
             HTTPUtils.sendErrorResponse(response, 403, "Resource access denied");
             return;

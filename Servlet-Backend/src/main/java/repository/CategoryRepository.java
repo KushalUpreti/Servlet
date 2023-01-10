@@ -1,6 +1,7 @@
 package repository;
 
 import dto.CategoryDTO;
+import util.Constants;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,11 +12,10 @@ public class CategoryRepository {
     Connection connection;
 
     private void createConnection() {
-        Map<String, String> env = System.getenv();
         try {
             Class.forName("com.mysql.jdbc.Driver");
             connection =
-                    DriverManager.getConnection("jdbc:mysql://localhost:3306/servlet", "root", env.get("MYSQL_PASS"));
+                    DriverManager.getConnection("jdbc:mysql://localhost:3306/servlet", "root", Constants.env.get("MYSQL_PASS"));
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
@@ -55,5 +55,4 @@ public class CategoryRepository {
             }
         }
     }
-
 }

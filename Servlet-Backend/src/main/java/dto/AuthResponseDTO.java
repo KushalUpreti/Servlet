@@ -3,12 +3,13 @@ package dto;
 public class AuthResponseDTO {
     private int id;
     private String email;
-    private String jwtToken;
+    private String token;
+    private String role = "ADMIN";
 
-    public AuthResponseDTO(UserDTO user, String jwtToken) {
+    public AuthResponseDTO(UserDTO user, String token) {
         this.id = user.getId();
         this.email = user.getEmail();
-        this.jwtToken = jwtToken;
+        this.token = token;
     }
 
     public int getId() {
@@ -27,11 +28,19 @@ public class AuthResponseDTO {
         this.email = email;
     }
 
-    public String getJwtToken() {
-        return jwtToken;
+    public String getToken() {
+        return token;
     }
 
-    public void setJwtToken(String jwtToken) {
-        this.jwtToken = jwtToken;
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

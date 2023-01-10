@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import repository.AuthRepository;
 import util.HTTPUtils;
 import util.JWTUtils;
+import util.Validation;
 
 import java.sql.SQLException;
 
@@ -25,8 +26,8 @@ public class AuthService {
     public void register(HttpServletRequest request) throws ServletException, SQLException {
         String requestBody = HTTPUtils.jsonParser(request);
         UserDTO userDTO = gson.fromJson(requestBody, UserDTO.class);
-        if (userDTO.getEmail().trim().equals("")
-                || userDTO.getPassword().trim().equals("")) {
+        if (!Validation.isEmail(userDTO.getEmail())
+                || Validation.isEmpty(userDTO.getPassword())) {
             throw new ServletException("Email or password cannot be empty.");
         }
         authRepository.register(userDTO);
@@ -36,19 +37,19 @@ public class AuthService {
         String requestBody = HTTPUtils.jsonParser(request);
         UserDTO userDTO = gson.fromJson(requestBody, UserDTO.class);
         String password = userDTO.getPassword().trim();
-        if (userDTO.getEmail().trim().equals("")
-                || password.equals("")) {
-            throw new ServletException("Email or password cannot be empty.");
+        if (!Validation.isEmail(userDTO.getEmail())
+                || Validation.isEmpty(password)) {
+            throw new ServletException("Email or password is invalid");
         }
         UserDTO user = authRepository.login(userDTO);
-        if(user == null){
+        if (user == null) {
             throw new ServletException("User not found");
         }
-        boolean passwordMatch = HTTPUtils.checkPasswordMatch(password,user.getPassword());
-        if(!passwordMatch){
+        boolean passwordMatch = HTTPUtils.checkPasswordMatch(password, user.getPassword());
+        if (!passwordMatch) {
             throw new ServletException("Invalid credentials. Try again!");
         }
         String token = jwtUtils.generateToken(user.getEmail());
-        return new AuthResponseDTO(user,token);
+        return new AuthResponseDTO(user, token);
     }
 }

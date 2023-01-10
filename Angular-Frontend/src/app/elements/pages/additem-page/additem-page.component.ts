@@ -27,7 +27,7 @@ export class AdditemPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.http
-      .get<any>(`http://localhost:8080/api/guest/category/`)
+      .get<any>(`http://localhost:8080/guest?type=category`)
       .subscribe((categories) => {
         this.categories = categories;
       });
@@ -35,10 +35,11 @@ export class AdditemPageComponent implements OnInit {
 
   addItem() {
     this.http
-      .post<any>(`http://localhost:8080/api/admin/addItem/${this.selected}`, {
+      .post<any>(`http://localhost:8080/item`, {
         title: this.title,
         description: this.description,
         price: this.price,
+        categoryId: +this.selected,
       })
       .subscribe((res) => {
         this.loadToast();

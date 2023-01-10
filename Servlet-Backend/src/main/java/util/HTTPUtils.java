@@ -27,7 +27,7 @@ public class HTTPUtils {
     }
 
     public static boolean checkPasswordMatch(String password, String hash) {
-        return BCrypt.checkpw(password,hash);
+        return BCrypt.checkpw(password, hash);
     }
 
     public static void sendErrorResponse(HttpServletResponse response, int status, String message) throws IOException {
@@ -36,5 +36,11 @@ public class HTTPUtils {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().print(new Gson().toJson(err));
+    }
+
+    public static void sendResponse(HttpServletResponse response, Object object) throws IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().print(new Gson().toJson(object));
     }
 }

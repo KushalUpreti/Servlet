@@ -1,6 +1,5 @@
 package controller;
 
-import com.google.gson.Gson;
 import dto.CategoryDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -29,9 +28,7 @@ public class GuestController extends HttpServlet {
         if (requestType.equals("category")) {
             try {
                 List<CategoryDTO> categories = categoryService.getAllCategories();
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                response.getWriter().print(new Gson().toJson(categories));
+                HTTPUtils.sendResponse(response, categories);
             } catch (SQLException s) {
                 HTTPUtils.sendErrorResponse(response, 400, s.getMessage());
             }

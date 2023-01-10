@@ -20,7 +20,7 @@ export class AuthEffects {
       ofType(AuthActions.fetchAuthCredentials),
       switchMap((action) => {
         return this.http
-          .post<Auth>(`http://localhost:8080/api/auth/login`, action)
+          .post<Auth>(`http://localhost:8080/auth?type=login`, action)
           .pipe(
             switchMap((response) => {
               this.router.navigate(['/']);

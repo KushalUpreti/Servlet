@@ -1,7 +1,6 @@
 package controller;
 
 
-import com.google.gson.Gson;
 import dto.AuthResponseDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -35,10 +34,7 @@ public class AuthController extends HttpServlet {
         if (requestType.equals("login")) {
             try {
                 AuthResponseDTO authResponse = authService.login(request);
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                response.getWriter().print(new Gson().toJson(authResponse));
-
+                HTTPUtils.sendResponse(response, authResponse);
             } catch (ServletException s) {
                 HTTPUtils.sendErrorResponse(response, 404, s.getMessage());
             }

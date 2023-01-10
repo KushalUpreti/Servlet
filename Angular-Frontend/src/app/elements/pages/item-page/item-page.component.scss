@@ -1,0 +1,40 @@
+.item-section {
+  padding: 2em 3em;
+  display: flex;
+  justify-content: space-between;
+
+  .image-wrapper {
+    width: 40vw;
+    // height: 30vh;
+
+    .desc-wrapper {
+      margin-top: 2em;
+    }
+  }
+
+  .control-wrapper {
+    .controls {
+      background-color: rgb(237, 237, 237);
+      width: 270px;
+      padding: 1em;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 180px;
+
+      p {
+        margin: 0;
+      }
+
+      .lower-controls {
+        .price-wrapper {
+          display: flex;
+          justify-content: space-between;
+        }
+        .buttons {
+          margin-top: 15px;
+        }
+      }
+    }
+  }
+}

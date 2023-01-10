@@ -1,0 +1,24 @@
+<div class="item-list-card">
+  <div class="image-wrapper">
+    <img
+      src="https://m.media-amazon.com/images/I/61Dw5Z8LzJL._SL1000_.jpg"
+      alt=""
+    />
+  </div>
+  <div class="text-wrapper">
+    <h5>{{ cartItem.title }}</h5>
+    <p>
+      Rs: <strong>{{ cartItem.price }}</strong>
+    </p>
+    <p>
+      Quantity: <strong>{{ cartItem.quantity }}</strong>
+    </p>
+    <button
+      type="button"
+      class="btn btn-danger"
+      (click)="onRemoveClick(cartItem.id)"
+    >
+      Remove
+    </button>
+  </div>
+</div>

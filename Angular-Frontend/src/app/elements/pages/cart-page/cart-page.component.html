@@ -1,0 +1,36 @@
+<section class="cart-section">
+  <h2>Cart Items</h2>
+  <div class="cart-control">
+    <app-cart-itemlist
+      [removeCartItem]="removeCartItem"
+      [cartItems]="cartItems"
+    ></app-cart-itemlist>
+
+    <div class="order-summary-wrapper">
+      <h3>Order Summary</h3>
+      <div>
+        <p>
+          Total Quantity: <strong>{{ getTotalQuantity() }}</strong>
+        </p>
+        <p>
+          Total Sum: <strong>Rs. {{ getTotalPrice() }}</strong>
+        </p>
+      </div>
+      <div class="button-container">
+        <button type="button" class="btn btn-dark" (click)="placeOrder()">
+          Place Order
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <app-order-detail
+    [accept]="accept"
+    *ngIf="showModal"
+    [cartItems]="cartItems"
+    [getTotalPrice]="getTotalPrice"
+    [getTotalQuantity]="getTotalQuantity"
+  ></app-order-detail>
+</section>

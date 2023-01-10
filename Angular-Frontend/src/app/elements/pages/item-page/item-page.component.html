@@ -1,0 +1,35 @@
+<section class="item-section">
+  <div class="image-wrapper">
+    <div class="item-carousel">
+      <app-carousel
+        [carouselItems]="carouselItems"
+        [showText]="showText"
+      ></app-carousel>
+    </div>
+    <div class="desc-wrapper">
+      <h4>{{ item && item.title }}</h4>
+      <p>
+        {{ item && item.description }}
+      </p>
+    </div>
+  </div>
+  <div class="control-wrapper">
+    <div class="controls">
+      <div class="title-h2">
+        <h4>{{ item && item.title }}</h4>
+      </div>
+      <div class="lower-controls">
+        <div class="price-wrapper">
+          <p>Price</p>
+          <strong>Rs. {{ item && item.price }}</strong>
+        </div>
+        <hr />
+        <div class="buttons">
+          <button class="btn btn-dark" (click)="addToCart(item.id)">
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,32 @@
+<div class="cart-modal">
+  <div class="title-wrapper">
+    <h3>Order Placed</h3>
+  </div>
+  <div class="item-wrapper">
+    <div class="item" *ngFor="let cartItem of cartItems">
+      <h5>{{ cartItem.title }}</h5>
+      <div>
+        <p>
+          Rs: <strong>{{ cartItem.price }}</strong>
+        </p>
+        <p>
+          Quantity: <strong>{{ cartItem.quantity }}</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div class="total-wrapper">
+    <p>
+      Total Quantity: <strong>{{ getTotalQuantity() }}</strong>
+    </p>
+    <p>
+      Total Sum: <strong>Rs. {{ getTotalPrice() }}</strong>
+    </p>
+  </div>
+  <div class="button-wrapper">
+    <button type="button" class="btn btn-dark" (click)="accept()">
+      Accept
+    </button>
+  </div>
+</div>

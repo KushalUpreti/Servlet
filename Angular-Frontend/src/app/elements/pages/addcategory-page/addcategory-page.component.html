@@ -1,0 +1,25 @@
+<section class="form-section">
+  <div class="login-form">
+    <div class="login-container">
+      <h3>Add Category</h3>
+    </div>
+    <form (ngSubmit)="addCategory()">
+      <div class="form-group">
+        <mat-form-field class="login-input" appearance="fill">
+          <mat-label>Title</mat-label>
+          <input
+            matInput
+            placeholder="pat@example.com"
+            [formControl]="title"
+            required
+          />
+          <mat-error *ngIf="title.invalid">{{
+            getTitleErrorMessage()
+          }}</mat-error>
+        </mat-form-field>
+      </div>
+      <button type="submit" class="btn btn-dark">Submit</button>
+    </form>
+  </div>
+</section>
+<app-toast [message]="message"></app-toast>

@@ -1,0 +1,33 @@
+.form-section {
+  padding: 2em 1em;
+}
+
+.login-form {
+  width: 90vw;
+  margin: auto;
+}
+
+.login-input {
+  width: 100%;
+}
+
+.form-group {
+  margin: 5px 0;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  padding: 1em 0;
+}
+
+@media only screen and (min-width: 992px) {
+  .form-section {
+    padding: 3em;
+  }
+
+  .login-form {
+    width: 50vw;
+    margin: auto;
+  }
+}

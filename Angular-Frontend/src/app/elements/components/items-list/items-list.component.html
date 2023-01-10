@@ -1,0 +1,9 @@
+<div class="container" *ngIf="category.items.length > 0">
+  <h5>{{ category.title }}</h5>
+  <div class="card-row">
+    <app-item-card
+      *ngFor="let item of category.items"
+      [item]="item"
+    ></app-item-card>
+  </div>
+</div>

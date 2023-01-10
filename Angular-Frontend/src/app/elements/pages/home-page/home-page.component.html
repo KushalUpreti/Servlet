@@ -1,0 +1,12 @@
+<div class="carousel-cover">
+  <app-carousel
+    [carouselItems]="carouselItems"
+    [showText]="showText"
+  ></app-carousel>
+</div>
+<section class="item-section">
+  <app-items-list
+    *ngFor="let category of categories"
+    [category]="category"
+  ></app-items-list>
+</section>

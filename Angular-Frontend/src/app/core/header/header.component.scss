@@ -1,0 +1,79 @@
+@import "../../../assets/variables";
+@import url("https://fonts.googleapis.com/css2?family=Coda&display=swap");
+
+.navbar-collapse {
+  flex-grow: 0;
+}
+
+nav {
+  background-color: $color-primary !important;
+  min-height: 4em;
+
+  .navbar-toggler {
+    background-color: white;
+  }
+}
+
+.cart_icon {
+  color: white;
+  // margin-right: 10px;
+  font-size: 1.5em;
+  overflow: visible;
+}
+
+.navbar-brand {
+  color: white;
+  display: flex;
+  align-items: center;
+
+  p {
+    margin: 0;
+    margin-left: 10px;
+  }
+}
+
+.search-form {
+  margin: 10px 0;
+}
+
+.auth-btn {
+  button {
+    margin: 0 2px;
+  }
+}
+.btn-link {
+  color: white;
+  text-decoration: none;
+}
+
+.cart-wrapper {
+  position: relative;
+
+  .cart-count {
+    background-color: red;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 3px;
+    right: 10px;
+
+    h3 {
+      margin: 0;
+      font-size: 0.75em;
+      color: white;
+      font-family: "Coda", cursive;
+      margin-top: 1px;
+    }
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  .search-form {
+    width: 50vw;
+    margin: 0;
+  }
+}

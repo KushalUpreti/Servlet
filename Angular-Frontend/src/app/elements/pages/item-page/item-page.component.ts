@@ -53,7 +53,7 @@ export class ItemPageComponent implements OnInit {
     }
 
     this.http
-      .get<any>(`http://localhost:8080/api/guest/item/getItem/${id}`)
+      .get<any>(`http://localhost:8080/guest/item/${id}`)
       .subscribe((item) => {
         this.item = item;
       });

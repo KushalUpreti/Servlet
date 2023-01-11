@@ -19,7 +19,7 @@ export class HeaderComponent implements OnInit {
     private readonly router: Router
   ) {}
 
-  categories: any = [];
+  categories: any;
 
   ngOnInit(): void {
     if (this.authService.getAuth()) {
@@ -35,9 +35,19 @@ export class HeaderComponent implements OnInit {
     }
 
     this.http
-      .get<any>(`http://localhost:8080/guest?type=category`)
+      .get<any>(`http://localhost:8080/guest/category?type=category-with-items`)
       .subscribe((categories) => {
-        this.categories = categories;
+        const modified = [];
+        for (const key in categories) {
+          {
+            const item = categories[key];
+            modified.push({
+              title: key,
+              items: item,
+            });
+          }
+        }
+        this.categories = modified;
       });
   }
 

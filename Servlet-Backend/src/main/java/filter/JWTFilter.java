@@ -33,7 +33,8 @@ public class JWTFilter implements Filter {
         final String jwtToken;
 
         String path = request.getRequestURI();
-        boolean allowed = Constants.ALLOWED_PATHS.contains(path);
+        boolean allowed = isUrlAllowed(path);
+
         if (allowed) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
@@ -56,5 +57,21 @@ public class JWTFilter implements Filter {
     @Override
     public void destroy() {
         Filter.super.destroy();
+    }
+
+    private boolean isUrlAllowed(String url) {
+        boolean allowed = false;
+        for (String pattern : Constants.ALLOWED_PATHS) {
+            boolean check = matchesPattern(url, pattern);
+            if (check) {
+                allowed = true;
+                break;
+            }
+        }
+        return allowed;
+    }
+
+    private boolean matchesPattern(String url, String pattern) {
+        return url.matches(pattern);
     }
 }

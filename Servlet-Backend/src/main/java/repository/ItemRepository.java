@@ -36,6 +36,24 @@ public class ItemRepository {
         return dto;
     }
 
+    public ItemDTO getItem(int itemId) throws SQLException{
+        createConnection();
+        String sql = "SELECT * from items where id = ?";
+        PreparedStatement prepareStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        prepareStatement.setInt(1, itemId);
+        ResultSet resultSet = prepareStatement.executeQuery();
+        ItemDTO itemDTO = null;
+        while (resultSet.next()){
+            int id = resultSet.getInt(1);
+            String title = resultSet.getString(2);
+            String description = resultSet.getString(3);
+            double price = resultSet.getDouble(4);
+            int categoryId = resultSet.getInt(5);
+            itemDTO = new ItemDTO(id,title,description,categoryId,price);
+        }
+        return itemDTO;
+    }
+
     private void terminateConnection() {
         if (connection != null) {
             try {

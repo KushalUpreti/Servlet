@@ -1,12 +1,15 @@
 package repository;
 
 import dto.CategoryDTO;
+import dto.CategoryItemDTO;
 import util.Constants;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.stream.Collectors.groupingBy;
 
 public class CategoryRepository {
     Connection connection;
@@ -35,6 +38,29 @@ public class CategoryRepository {
         }
         terminateConnection();
         return categories;
+    }
+
+    // TODO: Update getAllCategoriesWithItems logic using item list inside CategoryDTO
+    public Map<String, List<CategoryItemDTO>> getAllCategoriesWithItems() throws SQLException {
+        createConnection();
+        String sql = "SELECT c.title as category, i.title, i.id AS item_id FROM categories c\n" +
+                "INNER JOIN items i ON c.id = i.category_id";
+        Statement stmt = connection.createStatement();
+        ResultSet resultSet = stmt.executeQuery(sql);
+        List<CategoryItemDTO> categoriesWithItems = new ArrayList<>();
+
+        while (resultSet.next()) {
+            String category = resultSet.getString(1);
+            String item = resultSet.getString(2);
+            int itemId = resultSet.getInt(3);
+            categoriesWithItems.add(new CategoryItemDTO(category, item, itemId));
+        }
+
+        Map<String, List<CategoryItemDTO>> postsPerType = categoriesWithItems.stream()
+                .collect(groupingBy(CategoryItemDTO::getCategory));
+
+        terminateConnection();
+        return postsPerType;
     }
 
     public void addCategory(String title) throws SQLException {

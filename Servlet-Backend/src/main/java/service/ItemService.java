@@ -18,10 +18,19 @@ public class ItemService {
         this.gson = new Gson();
     }
 
-    public ItemDTO addItem(HttpServletRequest request) throws ServletException, SQLException {
+    //TODO: Add input validation
+    public ItemDTO addItem(HttpServletRequest request) throws SQLException {
         String requestBody = HTTPUtils.jsonParser(request);
         ItemDTO itemDTO = gson.fromJson(requestBody, ItemDTO.class);
         return itemRepository.addItem(itemDTO);
+    }
+
+    public ItemDTO getItem(int itemId) throws SQLException, ServletException {
+        ItemDTO dto = itemRepository.getItem(itemId);
+        if (dto == null) {
+            throw new ServletException("Item not found");
+        }
+        return dto;
     }
 
 }

@@ -27,7 +27,7 @@ export class AdditemPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.http
-      .get<any>(`http://localhost:8080/guest?type=category`)
+      .get<any>(`http://localhost:8080/guest/category?type=category`)
       .subscribe((categories) => {
         this.categories = categories;
       });

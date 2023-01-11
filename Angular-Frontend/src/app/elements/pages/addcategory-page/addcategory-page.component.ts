@@ -16,7 +16,7 @@ export class AddCategoryPageComponent {
   addCategory() {
     let title = this.title.value;
     this.http
-      .post<any>(`http://localhost:8080/category`, {
+      .post<any>(`http://localhost:8080/admin/category`, {
         title,
       })
       .subscribe((res) => {

@@ -26,7 +26,7 @@ export class RoleGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    return this.authService.getAuth().role === 'ADMIN'
+    return this.authService.getAuth().role.includes('ADMIN')
       ? true
       : this.router.navigate(['']);
   }

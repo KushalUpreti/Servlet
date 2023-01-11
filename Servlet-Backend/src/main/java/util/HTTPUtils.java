@@ -43,4 +43,16 @@ public class HTTPUtils {
         response.setCharacterEncoding("UTF-8");
         response.getWriter().print(new Gson().toJson(object));
     }
+
+    public static boolean isUrlAllowed(String url) {
+        boolean allowed = false;
+        for (String pattern : Constants.ALLOWED_PATHS) {
+            boolean check = url.matches(pattern);
+            if (check) {
+                allowed = true;
+                break;
+            }
+        }
+        return allowed;
+    }
 }

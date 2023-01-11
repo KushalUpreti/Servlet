@@ -111,7 +111,7 @@
 
 <div
   class="navbar navbar-expand-lg navbar-light bg-grey"
-  *ngIf="isAuthenticated() && getAuth().role == 'ADMIN'"
+  *ngIf="isAuthenticated() && getAuth().role.includes('ADMIN')"
 >
   <div class="container-fluid">
     <button

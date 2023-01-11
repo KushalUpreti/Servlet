@@ -1,8 +1,11 @@
 package dto;
 
+import java.util.List;
+
 public class CategoryDTO {
     private int id;
     private String title;
+//    private List<ItemDTO> items;
 
     public CategoryDTO(String title) {
         this.title = title;

@@ -35,7 +35,7 @@ export class AdditemPageComponent implements OnInit {
 
   addItem() {
     this.http
-      .post<any>(`http://localhost:8080/item`, {
+      .post<any>(`http://localhost:8080/admin/item`, {
         title: this.title,
         description: this.description,
         price: this.price,

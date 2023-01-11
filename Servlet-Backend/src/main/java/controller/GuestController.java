@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+//TODO: Remove type dependency from url
 @WebServlet("/guest/*")
 public class GuestController extends HttpServlet {
 

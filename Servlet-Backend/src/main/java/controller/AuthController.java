@@ -2,6 +2,7 @@ package controller;
 
 
 import dto.AuthResponseDTO;
+import exception.ClientException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -11,7 +12,6 @@ import service.AuthService;
 import util.HTTPUtils;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 @WebServlet("/auth")
 public class AuthController extends HttpServlet {
@@ -35,14 +35,14 @@ public class AuthController extends HttpServlet {
             try {
                 AuthResponseDTO authResponse = authService.login(request);
                 HTTPUtils.sendResponse(response, authResponse);
-            } catch (ServletException s) {
-                HTTPUtils.sendErrorResponse(response, 404, s.getMessage());
+            } catch (ClientException c) {
+                HTTPUtils.sendErrorResponse(response, c.getStatusCode(), c.getMessage());
             }
         } else {
             try {
                 authService.register(request);
-            } catch (ServletException | SQLException s) {
-                HTTPUtils.sendErrorResponse(response, 401, s.getMessage());
+            } catch (ClientException c) {
+                HTTPUtils.sendErrorResponse(response, c.getStatusCode(), c.getMessage());
             }
         }
     }

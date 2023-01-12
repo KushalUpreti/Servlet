@@ -4,15 +4,19 @@ public class ItemDTO {
     private int id;
     private String title;
     private String description;
-    private int categoryId;
     private double price;
+    private CategoryDTO category;
 
-    public ItemDTO(int id, String title, String description, int categoryId, double price) {
+    public ItemDTO(int id, String title, String description, double price) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.categoryId = categoryId;
         this.price = price;
+    }
+
+    public ItemDTO(int id, String title, String description, double price, CategoryDTO category) {
+        this(id, title, description, price);
+        this.category = category;
     }
 
     public int getId() {
@@ -39,19 +43,19 @@ public class ItemDTO {
         this.description = description;
     }
 
-    public int getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
-    }
-
     public double getPrice() {
         return price;
     }
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public CategoryDTO getCategory() {
+        return category;
+    }
+
+    public void setCategory(CategoryDTO category) {
+        this.category = category;
     }
 }

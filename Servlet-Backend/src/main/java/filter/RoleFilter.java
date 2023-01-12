@@ -26,7 +26,7 @@ public class RoleFilter implements Filter {
         this.userService = new UserService();
 
         roleMap = new HashMap<>();
-        roleMap.put("^/admin/.*$", new String[]{"ADMIN"});
+        roleMap.put("^/admin/.*$", new String[]{"ADMIN", "USER"});
         roleMap.put("/category", new String[]{"SUPER_ADMIN"});
     }
 
@@ -42,7 +42,7 @@ public class RoleFilter implements Filter {
             return;
         }
 
-        final String jwtToken = request.getHeader("Authorization").substring(7);
+        final String jwtToken = (String) servletRequest.getAttribute("token");
         String email = jwtUtils.extractEmail(jwtToken);
         List<String> roles = null;
 

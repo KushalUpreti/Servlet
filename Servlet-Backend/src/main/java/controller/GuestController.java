@@ -1,7 +1,6 @@
 package controller;
 
 import dto.CategoryDTO;
-import dto.CategoryItemDTO;
 import dto.ItemDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,7 +14,6 @@ import util.HTTPUtils;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 //TODO: Remove type dependency from url
 @WebServlet("/guest/*")
@@ -50,13 +48,6 @@ public class GuestController extends HttpServlet {
         if (requestType.equals("category")) {
             try {
                 List<CategoryDTO> categories = categoryService.getAllCategories();
-                HTTPUtils.sendResponse(response, categories);
-            } catch (SQLException s) {
-                HTTPUtils.sendErrorResponse(response, 400, s.getMessage());
-            }
-        } else if (requestType.equals("category-with-items")) {
-            try {
-                Map<String, List<CategoryItemDTO>> categories = categoryService.getAllCategoriesWithItems();
                 HTTPUtils.sendResponse(response, categories);
             } catch (SQLException s) {
                 HTTPUtils.sendErrorResponse(response, 400, s.getMessage());

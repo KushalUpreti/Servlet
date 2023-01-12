@@ -55,7 +55,7 @@ public class JWTFilter implements Filter {
             HTTPUtils.sendErrorResponse(response, 403, "Token expired. Login Again!");
             return;
         }
-
+        servletRequest.setAttribute("token", jwtToken);
         filterChain.doFilter(servletRequest, servletResponse);
     }
 

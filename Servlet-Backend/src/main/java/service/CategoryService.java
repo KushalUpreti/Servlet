@@ -2,7 +2,6 @@ package service;
 
 import com.google.gson.Gson;
 import dto.CategoryDTO;
-import dto.CategoryItemDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import repository.CategoryRepository;
@@ -11,7 +10,6 @@ import util.Validation;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 public class CategoryService {
     private final CategoryRepository categoryRepository;
@@ -26,10 +24,6 @@ public class CategoryService {
         return categoryRepository.getAllCategories();
     }
 
-    public Map<String, List<CategoryItemDTO>> getAllCategoriesWithItems() throws SQLException {
-        return categoryRepository.getAllCategoriesWithItems();
-    }
-
     public void addCategory(HttpServletRequest request) throws ServletException, SQLException {
         String requestBody = HTTPUtils.jsonParser(request);
         CategoryDTO categoryDTO = gson.fromJson(requestBody, CategoryDTO.class);
@@ -38,4 +32,5 @@ public class CategoryService {
         }
         categoryRepository.addCategory(categoryDTO.getTitle());
     }
+
 }

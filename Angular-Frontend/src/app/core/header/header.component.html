@@ -70,25 +70,27 @@
     <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
       <ul class="navbar-nav">
         <li class="nav-item dropdown" *ngFor="let category of categories">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            {{ category.title }}
-          </a>
-          <ul class="dropdown-menu dropdown-menu-dark">
-            <li *ngFor="let item of category.items">
-              <a
-                class="dropdown-item"
-                [routerLink]="['/item']"
-                [queryParams]="{ id: item.itemId }"
-                >{{ item.item }}</a
-              >
-            </li>
-          </ul>
+          <div *ngIf="category.items.length > 0">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              {{ category.title }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark">
+              <li *ngFor="let item of category.items">
+                <a
+                  class="dropdown-item"
+                  [routerLink]="['item']"
+                  [queryParams]="{ id: item.id }"
+                  >{{ item.title }}</a
+                >
+              </li>
+            </ul>
+          </div>
         </li>
       </ul>
     </div>

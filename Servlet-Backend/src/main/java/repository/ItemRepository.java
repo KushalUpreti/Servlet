@@ -1,5 +1,6 @@
 package repository;
 
+import dto.CategoryDTO;
 import dto.ItemDTO;
 import util.Constants;
 
@@ -25,7 +26,7 @@ public class ItemRepository {
         prepareStatement.setString(1, dto.getTitle());
         prepareStatement.setString(2, dto.getDescription());
         prepareStatement.setDouble(3, dto.getPrice());
-        prepareStatement.setInt(4, dto.getCategoryId());
+        prepareStatement.setInt(4, dto.getCategory().getId());
         prepareStatement.executeUpdate();
 
         ResultSet generatedKeys = prepareStatement.getGeneratedKeys();
@@ -36,20 +37,21 @@ public class ItemRepository {
         return dto;
     }
 
-    public ItemDTO getItem(int itemId) throws SQLException{
+    public ItemDTO getItem(int itemId) throws SQLException {
         createConnection();
-        String sql = "SELECT * from items where id = ?";
+        String sql = "SELECT i.*,  c.title as category FROM servlet.categories c INNER JOIN servlet.items i ON c.id = i.category_id WHERE i.id = ?";
         PreparedStatement prepareStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         prepareStatement.setInt(1, itemId);
         ResultSet resultSet = prepareStatement.executeQuery();
         ItemDTO itemDTO = null;
-        while (resultSet.next()){
+        while (resultSet.next()) {
             int id = resultSet.getInt(1);
             String title = resultSet.getString(2);
             String description = resultSet.getString(3);
             double price = resultSet.getDouble(4);
             int categoryId = resultSet.getInt(5);
-            itemDTO = new ItemDTO(id,title,description,categoryId,price);
+            String category = resultSet.getString(6);
+            itemDTO = new ItemDTO(id, title, description, price, new CategoryDTO(categoryId, category));
         }
         return itemDTO;
     }

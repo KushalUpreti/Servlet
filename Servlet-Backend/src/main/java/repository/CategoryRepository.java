@@ -1,15 +1,14 @@
 package repository;
 
 import dto.CategoryDTO;
-import dto.CategoryItemDTO;
+import dto.ItemDTO;
 import util.Constants;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static java.util.stream.Collectors.groupingBy;
 
 public class CategoryRepository {
     Connection connection;
@@ -24,43 +23,55 @@ public class CategoryRepository {
         }
     }
 
-    public List<CategoryDTO> getAllCategories() throws SQLException {
+    public CategoryDTO getCategory(int id) throws SQLException {
         createConnection();
-        String sql = "SELECT * FROM categories";
-        Statement stmt = connection.createStatement();
-        ResultSet resultSet = stmt.executeQuery(sql);
+        String sql = "SELECT * FROM categories WHERE id = ?";
+        PreparedStatement prepareStatement = connection.prepareStatement(sql);
+        prepareStatement.setInt(1, id);
+        ResultSet resultSet = prepareStatement.executeQuery();
+        CategoryDTO category = null;
 
-        List<CategoryDTO> categories = new ArrayList<>();
         while (resultSet.next()) {
             int categoryId = resultSet.getInt(1);
             String title = resultSet.getString(2);
-            categories.add(new CategoryDTO(categoryId, title));
+            category = new CategoryDTO(categoryId, title);
         }
         terminateConnection();
-        return categories;
+        return category;
     }
 
-    // TODO: Update getAllCategoriesWithItems logic using item list inside CategoryDTO
-    public Map<String, List<CategoryItemDTO>> getAllCategoriesWithItems() throws SQLException {
+    public List<CategoryDTO> getAllCategories() throws SQLException {
         createConnection();
-        String sql = "SELECT c.title as category, i.title, i.id AS item_id FROM categories c\n" +
-                "INNER JOIN items i ON c.id = i.category_id";
+        String sql = "SELECT c.id as category_id, c.title as category, i.id as item_id, i.title, i.description, i.price FROM categories c LEFT JOIN items i ON c.id = i.category_id;";
         Statement stmt = connection.createStatement();
         ResultSet resultSet = stmt.executeQuery(sql);
-        List<CategoryItemDTO> categoriesWithItems = new ArrayList<>();
 
+        Map<Integer, CategoryDTO> categoryMap = new HashMap<>();
         while (resultSet.next()) {
-            String category = resultSet.getString(1);
-            String item = resultSet.getString(2);
+            int categoryId = resultSet.getInt(1);
+            String category = resultSet.getString(2);
             int itemId = resultSet.getInt(3);
-            categoriesWithItems.add(new CategoryItemDTO(category, item, itemId));
-        }
+            String itemTitle = resultSet.getString(4);
+            String itemDescription = resultSet.getString(5);
+            double itemPrice = resultSet.getDouble(6);
 
-        Map<String, List<CategoryItemDTO>> postsPerType = categoriesWithItems.stream()
-                .collect(groupingBy(CategoryItemDTO::getCategory));
+            if (categoryMap.containsKey(categoryId)) {
+                CategoryDTO categoryDTO = categoryMap.get(categoryId);
+                if (itemId != 0) {
+                    categoryDTO.getItems().add(new ItemDTO(itemId, itemTitle, itemDescription, itemPrice));
+                }
+            } else {
+                List<ItemDTO> list = new ArrayList<>();
+                if (itemId != 0) {
+                    list.add(new ItemDTO(itemId, itemTitle, itemDescription, itemPrice));
+                }
+                categoryMap.put(categoryId, new CategoryDTO(categoryId, category, list));
+            }
+        }
+        List<CategoryDTO> categories = new ArrayList<>(categoryMap.values());
 
         terminateConnection();
-        return postsPerType;
+        return categories;
     }
 
     public void addCategory(String title) throws SQLException {

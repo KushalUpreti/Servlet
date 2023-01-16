@@ -26,9 +26,8 @@ public class JWTUtils {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        SecretKey key = new SecretKeySpec(encodedKey, 0, encodedKey.length,
+        return new SecretKeySpec(encodedKey, 0, encodedKey.length,
                 "HmacSHA512");
-        return key;
     }
 
     public String extractEmail(String token) {

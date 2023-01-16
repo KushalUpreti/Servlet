@@ -56,11 +56,8 @@ public class GuestController extends HttpServlet {
     }
 
     private void itemGetEndPoint(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        int index = Integer.parseInt(request.getPathInfo().split("/")[2]);
-
         try {
-            Item item = itemService.getItem(index);
+            Item item = itemService.getItem(request);
             HTTPUtils.sendResponse(response, item);
         } catch (SQLException | ServletException s) {
             HTTPUtils.sendErrorResponse(response, 400, s.getMessage());

@@ -7,7 +7,7 @@
 
     <context-param>
         <param-name>tempfile.dir</param-name>
-        <param-value>webapps/ROOT/files</param-value>
+        <param-value>webapps\ROOT\files</param-value>
     </context-param>
 
     <filter-mapping>

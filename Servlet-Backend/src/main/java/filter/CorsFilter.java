@@ -16,9 +16,10 @@ public class CorsFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
 
         String requestOrigin = request.getHeader("Origin");
+        System.out.println(requestOrigin);
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        if (Constants.ALLOWED_ORIGINS.contains(requestOrigin)) {
+//        if (Constants.ALLOWED_ORIGINS.contains(requestOrigin)) {
             // Authorize the origin, all headers, and all methods
             response.addHeader("Access-Control-Allow-Origin", requestOrigin);
             response.addHeader("Access-Control-Allow-Headers", "*");
@@ -32,7 +33,7 @@ public class CorsFilter implements Filter {
                 resp.setStatus(HttpServletResponse.SC_ACCEPTED);
                 return;
             }
-        }
+//        }
         // pass the request along the filter chain
         filterChain.doFilter(request, servletResponse);
     }

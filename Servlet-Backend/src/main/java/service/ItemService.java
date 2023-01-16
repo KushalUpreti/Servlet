@@ -38,9 +38,12 @@ public class ItemService {
         return item2;
     }
 
-    public Item getItem(int itemId) throws SQLException, ServletException {
+    public Item getItem(HttpServletRequest request) throws SQLException, ServletException {
+        int itemId = Integer.parseInt(request.getPathInfo().split("/")[2]);
+        String uploadFilePath = request.getServletContext().getAttribute("FILES_DIR").toString();
+
         Item item = itemRepository.getItem(itemId);
-        List<String> images = itemRepository.getImages(itemId);
+        List<String> images = itemRepository.getImages(itemId,uploadFilePath);
         item.setImages(images);
         if (item == null) {
             throw new ServletException("Item not found");

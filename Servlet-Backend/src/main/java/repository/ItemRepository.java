@@ -1,10 +1,10 @@
 package repository;
 
-import model.Category;
-import model.Item;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
+import model.Category;
+import model.Item;
 import util.Constants;
 
 import java.io.File;
@@ -110,10 +110,9 @@ public class ItemRepository {
         } finally {
             terminateConnection();
         }
-        System.out.println(imageIdList);
     }
 
-    public List<String> getImages(int itemId) throws SQLException {
+    public List<String> getImages(int itemId, String fileUploadPath) throws SQLException {
         createConnection();
         List<String> images = new ArrayList<>();
         String sql = "SELECT title FROM images WHERE item_id = ?";

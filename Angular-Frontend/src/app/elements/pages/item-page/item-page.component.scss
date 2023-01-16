@@ -5,7 +5,10 @@
 
   .image-wrapper {
     width: 40vw;
-    // height: 30vh;
+
+    .item-carousel {
+      height: 40vh;
+    }
 
     .desc-wrapper {
       margin-top: 2em;

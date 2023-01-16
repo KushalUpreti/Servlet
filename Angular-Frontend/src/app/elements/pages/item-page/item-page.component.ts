@@ -20,27 +20,7 @@ export class ItemPageComponent implements OnInit {
   }
 
   item: any = null;
-
-  carouselItems = [
-    {
-      imageURL: 'https://m.media-amazon.com/images/I/61Dw5Z8LzJL._SL1000_.jpg',
-      title: "Women's Fashion",
-      caption:
-        'Pick outfits that fit the setting. Let your characters change outfits.',
-    },
-    {
-      imageURL: 'https://m.media-amazon.com/images/I/61Dw5Z8LzJL._SL1000_.jpg',
-      title: "Women's Fashion",
-      caption:
-        'Pick outfits that fit the setting. Let your characters change outfits.',
-    },
-    {
-      imageURL: 'https://m.media-amazon.com/images/I/61Dw5Z8LzJL._SL1000_.jpg',
-      title: "Women's Fashion",
-      caption:
-        'Pick outfits that fit the setting. Let your characters change outfits.',
-    },
-  ];
+  carouselItems = [];
   showText: boolean = false;
 
   ngOnInit(): void {
@@ -56,6 +36,12 @@ export class ItemPageComponent implements OnInit {
       .get<any>(`http://localhost:8080/guest/item/${id}`)
       .subscribe((item) => {
         this.item = item;
+        this.carouselItems = item.images.map((image, index) => {
+          return {
+            imageURL: `http://localhost:8080/images/${image}`,
+            class: `carousel-item ${index === 0 ? 'active' : ''}`,
+          };
+        });
       });
   }
 

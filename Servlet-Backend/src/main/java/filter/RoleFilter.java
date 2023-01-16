@@ -26,7 +26,7 @@ public class RoleFilter implements Filter {
         this.userService = new UserService();
 
         roleMap = new HashMap<>();
-        roleMap.put("^/admin/.*$", new String[]{"ADMIN", "USER"});
+        roleMap.put("^/admin/.*$", new String[]{"ADMIN"});
         roleMap.put("/category", new String[]{"SUPER_ADMIN"});
     }
 

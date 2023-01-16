@@ -1,4 +1,23 @@
 <section class="form-section">
+  <aside>
+    <div><h4>Items</h4></div>
+    <div class="item-list">
+      <!-- Loops -->
+      <div class="item-wraper" *ngFor="let item of items">
+        <div>
+          <p>{{ item.title }}</p>
+        </div>
+
+        <mat-icon
+          aria-hidden="false"
+          aria-label="Delete"
+          fontIcon="delete"
+        ></mat-icon>
+      </div>
+    </div>
+    <button mat-flat-button color="warn">Add Item</button>
+  </aside>
+
   <div class="login-form">
     <div class="login-container">
       <h3>Add Item</h3>
@@ -63,18 +82,19 @@
           }}</mat-error>
         </mat-form-field>
       </div>
-      <!-- <div class="mb-3">
-        <label for="formFileMultiple" class="form-label">File upload</label>
+      <div class="mb-3">
+        <label for="formFileMultiple" class="form-label"
+          >Item Images Upload</label
+        >
         <input
           class="form-control"
           type="file"
           id="formFileMultiple"
-          accept="image/png, image/jpeg"
           multiple
-          (change)="selectFiles($event)"
+          accept="image/png, image/gif, image/jpeg"
+          (change)="onFileChange($event)"
         />
-      </div> -->
-
+      </div>
       <button type="submit" class="btn btn-dark">Submit</button>
     </form>
   </div>

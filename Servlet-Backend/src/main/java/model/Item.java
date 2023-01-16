@@ -1,20 +1,27 @@
-package dto;
+package model;
 
-public class ItemDTO {
+import java.util.List;
+
+public class Item {
     private int id;
     private String title;
     private String description;
     private double price;
-    private CategoryDTO category;
+    private Category category;
+    private List<String> images;
 
-    public ItemDTO(int id, String title, String description, double price) {
-        this.id = id;
+    public Item(String title, String description, double price) {
         this.title = title;
         this.description = description;
         this.price = price;
     }
 
-    public ItemDTO(int id, String title, String description, double price, CategoryDTO category) {
+    public Item(int id, String title, String description, double price) {
+        this(title, description, price);
+        this.id = id;
+    }
+
+    public Item(int id, String title, String description, double price, Category category) {
         this(id, title, description, price);
         this.category = category;
     }
@@ -51,11 +58,19 @@ public class ItemDTO {
         this.price = price;
     }
 
-    public CategoryDTO getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(CategoryDTO category) {
+    public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
     }
 }

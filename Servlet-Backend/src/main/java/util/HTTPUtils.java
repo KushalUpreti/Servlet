@@ -30,18 +30,27 @@ public class HTTPUtils {
         return BCrypt.checkpw(password, hash);
     }
 
-    public static void sendErrorResponse(HttpServletResponse response, int status, String message) throws IOException {
-        ErrorResponseDTO err = new ErrorResponseDTO(status, message);
-        response.setStatus(status);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().print(new Gson().toJson(err));
+    public static void sendErrorResponse(HttpServletResponse response, int status, String message) {
+        try {
+            ErrorResponseDTO err = new ErrorResponseDTO(status, message);
+            response.setStatus(status);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().print(new Gson().toJson(err));
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
-    public static void sendResponse(HttpServletResponse response, Object object) throws IOException {
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().print(new Gson().toJson(object));
+    public static void sendResponse(HttpServletResponse response, Object object) {
+        try {
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().print(new Gson().toJson(object));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static boolean isUrlAllowed(String url) {

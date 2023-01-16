@@ -1,7 +1,7 @@
 package repository;
 
-import dto.CategoryDTO;
-import dto.ItemDTO;
+import model.Category;
+import model.Item;
 import util.Constants;
 
 import java.sql.*;
@@ -23,30 +23,30 @@ public class CategoryRepository {
         }
     }
 
-    public CategoryDTO getCategory(int id) throws SQLException {
+    public Category getCategory(int id) throws SQLException {
         createConnection();
         String sql = "SELECT * FROM categories WHERE id = ?";
         PreparedStatement prepareStatement = connection.prepareStatement(sql);
         prepareStatement.setInt(1, id);
         ResultSet resultSet = prepareStatement.executeQuery();
-        CategoryDTO category = null;
+        Category category = null;
 
         while (resultSet.next()) {
             int categoryId = resultSet.getInt(1);
             String title = resultSet.getString(2);
-            category = new CategoryDTO(categoryId, title);
+            category = new Category(categoryId, title);
         }
         terminateConnection();
         return category;
     }
 
-    public List<CategoryDTO> getAllCategories() throws SQLException {
+    public List<Category> getAllCategories() throws SQLException {
         createConnection();
         String sql = "SELECT c.id as category_id, c.title as category, i.id as item_id, i.title, i.description, i.price FROM categories c LEFT JOIN items i ON c.id = i.category_id;";
         Statement stmt = connection.createStatement();
         ResultSet resultSet = stmt.executeQuery(sql);
 
-        Map<Integer, CategoryDTO> categoryMap = new HashMap<>();
+        Map<Integer, Category> categoryMap = new HashMap<>();
         while (resultSet.next()) {
             int categoryId = resultSet.getInt(1);
             String category = resultSet.getString(2);
@@ -56,19 +56,19 @@ public class CategoryRepository {
             double itemPrice = resultSet.getDouble(6);
 
             if (categoryMap.containsKey(categoryId)) {
-                CategoryDTO categoryDTO = categoryMap.get(categoryId);
+                Category categoryDTO = categoryMap.get(categoryId);
                 if (itemId != 0) {
-                    categoryDTO.getItems().add(new ItemDTO(itemId, itemTitle, itemDescription, itemPrice));
+                    categoryDTO.getItems().add(new Item(itemId, itemTitle, itemDescription, itemPrice));
                 }
             } else {
-                List<ItemDTO> list = new ArrayList<>();
+                List<Item> list = new ArrayList<>();
                 if (itemId != 0) {
-                    list.add(new ItemDTO(itemId, itemTitle, itemDescription, itemPrice));
+                    list.add(new Item(itemId, itemTitle, itemDescription, itemPrice));
                 }
-                categoryMap.put(categoryId, new CategoryDTO(categoryId, category, list));
+                categoryMap.put(categoryId, new Category(categoryId, category, list));
             }
         }
-        List<CategoryDTO> categories = new ArrayList<>(categoryMap.values());
+        List<Category> categories = new ArrayList<>(categoryMap.values());
 
         terminateConnection();
         return categories;

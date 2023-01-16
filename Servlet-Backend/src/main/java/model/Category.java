@@ -1,24 +1,24 @@
-package dto;
+package model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryDTO {
+public class Category {
     private int id;
     private String title;
-    private List<ItemDTO> items;
+    private List<Item> items;
 
-    public CategoryDTO(String title) {
+    public Category(String title) {
         this.title = title;
     }
 
-    public CategoryDTO(int id, String title) {
+    public Category(int id, String title) {
         this(title);
         this.id = id;
         items = new ArrayList<>();
     }
 
-    public CategoryDTO(int id, String title, List<ItemDTO> list) {
+    public Category(int id, String title, List<Item> list) {
         this(id, title);
         this.items = list;
     }
@@ -39,11 +39,11 @@ public class CategoryDTO {
         this.title = title;
     }
 
-    public List<ItemDTO> getItems() {
+    public List<Item> getItems() {
         return items;
     }
 
-    public void setItems(List<ItemDTO> items) {
+    public void setItems(List<Item> items) {
         this.items = items;
     }
 }

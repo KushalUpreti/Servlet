@@ -1,6 +1,6 @@
 package repository;
 
-import dto.UserDTO;
+import model.User;
 import util.Constants;
 import util.HTTPUtils;
 
@@ -19,19 +19,19 @@ public class AuthRepository {
         }
     }
 
-    public void register(UserDTO userDTO) throws SQLException {
+    public void register(User user) throws SQLException {
         createConnection();
         String sql = "Insert into users (email,password) VALUES (?, ?)";
         PreparedStatement prepareStatement = connection.prepareStatement(sql);
-        String passwordHash = HTTPUtils.encodePassword(userDTO.getPassword());
-        prepareStatement.setString(1, userDTO.getEmail());
+        String passwordHash = HTTPUtils.encodePassword(user.getPassword());
+        prepareStatement.setString(1, user.getEmail());
         prepareStatement.setString(2, passwordHash);
         prepareStatement.executeUpdate();
         terminateConnection();
     }
 
-    public UserDTO login(UserDTO userDTO) {
-        UserDTO user = null;
+    public User login(User userDTO) {
+        User user = null;
         try {
             createConnection();
             String sql = "SELECT * FROM USERS WHERE email = ?";
@@ -42,7 +42,7 @@ public class AuthRepository {
                 int id = resultSet.getInt("id");
                 String email = resultSet.getString("email");
                 String password = resultSet.getString("password");
-                user = new UserDTO(id, email, password);
+                user = new User(id, email, password);
             }
         } catch (SQLException e) {
             e.printStackTrace();

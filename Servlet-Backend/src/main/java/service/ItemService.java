@@ -1,16 +1,15 @@
 package service;
 
 import com.google.gson.Gson;
-import dto.CategoryDTO;
-import dto.ItemDTO;
-import exception.ClientException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import model.Category;
+import model.Item;
 import repository.CategoryRepository;
 import repository.ItemRepository;
-import util.HTTPUtils;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class ItemService {
     private final ItemRepository itemRepository;
@@ -24,23 +23,33 @@ public class ItemService {
     }
 
     //TODO: Add input validation
-    public ItemDTO addItem(HttpServletRequest request) throws SQLException, ClientException {
+    public Item addItem(HttpServletRequest request) throws Exception {
         int categoryId = Integer.parseInt(request.getPathInfo().split("/")[2]);
+        String title = request.getParameter("title");
+        String description = request.getParameter("description");
+        double price = Double.parseDouble(request.getParameter("price"));
 
-        String requestBody = HTTPUtils.jsonParser(request);
+        Category category = categoryRepository.getCategory(categoryId);
+        Item item = new Item(title, description, price);
+        item.setCategory(category);
 
-        CategoryDTO category = categoryRepository.getCategory(categoryId);
-        ItemDTO itemDTO = gson.fromJson(requestBody, ItemDTO.class);
-        itemDTO.setCategory(category);
-        return itemRepository.addItem(itemDTO);
+        Item item2 = itemRepository.addItem(item);
+        itemRepository.addImages(request, item.getId());
+        return item2;
     }
 
-    public ItemDTO getItem(int itemId) throws SQLException, ServletException {
-        ItemDTO dto = itemRepository.getItem(itemId);
-        if (dto == null) {
+    public Item getItem(int itemId) throws SQLException, ServletException {
+        Item item = itemRepository.getItem(itemId);
+        List<String> images = itemRepository.getImages(itemId);
+        item.setImages(images);
+        if (item == null) {
             throw new ServletException("Item not found");
         }
-        return dto;
+        return item;
     }
 
+    public List<Item> getAllItems() throws SQLException {
+        List<Item> items = itemRepository.getAllItems();
+        return items;
+    }
 }

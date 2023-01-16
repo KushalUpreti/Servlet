@@ -1,10 +1,17 @@
 package repository;
 
-import dto.CategoryDTO;
-import dto.ItemDTO;
+import model.Category;
+import model.Item;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Part;
 import util.Constants;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemRepository {
     Connection connection;
@@ -19,7 +26,7 @@ public class ItemRepository {
         }
     }
 
-    public ItemDTO addItem(ItemDTO dto) throws SQLException {
+    public Item addItem(Item dto) throws SQLException {
         createConnection();
         String sql = "Insert into items (title,description,price,category_id) VALUES (?,?,?,?)";
         PreparedStatement prepareStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -37,13 +44,13 @@ public class ItemRepository {
         return dto;
     }
 
-    public ItemDTO getItem(int itemId) throws SQLException {
+    public Item getItem(int itemId) throws SQLException {
         createConnection();
         String sql = "SELECT i.*,  c.title as category FROM servlet.categories c INNER JOIN servlet.items i ON c.id = i.category_id WHERE i.id = ?";
         PreparedStatement prepareStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         prepareStatement.setInt(1, itemId);
         ResultSet resultSet = prepareStatement.executeQuery();
-        ItemDTO itemDTO = null;
+        Item item = null;
         while (resultSet.next()) {
             int id = resultSet.getInt(1);
             String title = resultSet.getString(2);
@@ -51,9 +58,99 @@ public class ItemRepository {
             double price = resultSet.getDouble(4);
             int categoryId = resultSet.getInt(5);
             String category = resultSet.getString(6);
-            itemDTO = new ItemDTO(id, title, description, price, new CategoryDTO(categoryId, category));
+            item = new Item(id, title, description, price, new Category(categoryId, category));
         }
-        return itemDTO;
+        return item;
+    }
+
+    public List<Item> getAllItems() throws SQLException {
+        createConnection();
+        String sql = "SELECT i.*,  c.title as category FROM servlet.categories c INNER JOIN servlet.items i ON c.id = i.category_id";
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(sql);
+
+        List<Item> items = new ArrayList<>();
+        while (resultSet.next()) {
+            int id = resultSet.getInt(1);
+            String title = resultSet.getString(2);
+            String description = resultSet.getString(3);
+            double price = resultSet.getDouble(4);
+            int categoryId = resultSet.getInt(5);
+            String category = resultSet.getString(6);
+            Item item = new Item(id, title, description, price, new Category(categoryId, category));
+            items.add(item);
+        }
+        return items;
+    }
+
+    public void addImages(HttpServletRequest request, int itemId) throws ServletException, IOException {
+        ArrayList<String> files = writeFiles(request);
+        ArrayList<Integer> imageIdList = new ArrayList<>();
+        if (files.size() == 0) {
+            return;
+        }
+        createConnection();
+        String sql = "Insert into images (title,item_id) VALUES (?,?)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            for (String file : files) {
+                ps.setString(1, file);
+                ps.setInt(2, itemId);
+                ps.addBatch();
+                ps.clearParameters();
+            }
+            ps.executeBatch();
+
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                imageIdList.add(generatedKeys.getInt(1));
+            }
+        } catch (SQLException s) {
+            s.printStackTrace();
+        } finally {
+            terminateConnection();
+        }
+        System.out.println(imageIdList);
+    }
+
+    public List<String> getImages(int itemId) throws SQLException {
+        createConnection();
+        List<String> images = new ArrayList<>();
+        String sql = "SELECT title FROM images WHERE item_id = ?";
+        PreparedStatement prepareStatement = connection.prepareStatement(sql);
+        prepareStatement.setInt(1, itemId);
+        ResultSet resultSet = prepareStatement.executeQuery();
+
+        while (resultSet.next()) {
+            images.add(resultSet.getString(1));
+        }
+        return images;
+    }
+
+
+    public ArrayList<String> writeFiles(HttpServletRequest request) throws ServletException, IOException {
+        String uploadFilePath = request.getServletContext().getAttribute("FILES_DIR").toString();
+        ArrayList<String> fileNames = new ArrayList<>();
+
+        for (Part part : request.getParts()) {
+            String fileName = getFileName(part);
+            if (!fileName.trim().equals("")) {
+                part.write(uploadFilePath + File.separator + fileName);
+                fileNames.add(fileName);
+            }
+        }
+        return fileNames;
+    }
+
+    private String getFileName(Part part) {
+        String contentDisp = part.getHeader("content-disposition");
+        String[] tokens = contentDisp.split(";");
+        for (String token : tokens) {
+            if (token.trim().startsWith("filename")) {
+                return token.substring(token.indexOf("=") + 2, token.length() - 1);
+            }
+        }
+        return "";
     }
 
     private void terminateConnection() {

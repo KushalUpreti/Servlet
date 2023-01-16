@@ -1,5 +1,7 @@
 package dto;
 
+import model.User;
+
 import java.util.List;
 
 public class AuthResponseDTO {
@@ -8,7 +10,7 @@ public class AuthResponseDTO {
     private String token;
     private List<String> role;
 
-    public AuthResponseDTO(UserDTO user, String token, List<String> role) {
+    public AuthResponseDTO(User user, String token, List<String> role) {
         this.id = user.getId();
         this.email = user.getEmail();
         this.token = token;

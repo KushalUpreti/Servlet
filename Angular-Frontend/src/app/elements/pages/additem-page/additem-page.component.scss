@@ -1,5 +1,53 @@
 .form-section {
   padding: 2em 1em;
+  display: flex;
+}
+
+aside {
+  width: 300px;
+  max-height: 80vh;
+  background: rgb(255, 255, 255);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px,
+    rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+  padding: 6px 12px;
+  display: flex;
+  flex-direction: column;
+
+  .item-list {
+    padding: 6px 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 80%;
+    overflow-y: auto;
+  }
+
+  .item-wraper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(240, 240, 240);
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    p {
+      margin: 0;
+    }
+
+    .mat-icon {
+      color: red;
+      &:hover {
+        color: black;
+        transition: all 0.3s ease;
+      }
+    }
+
+    &:hover {
+      background-color: gainsboro;
+    }
+  }
 }
 
 .login-form {
@@ -28,7 +76,7 @@
 
   .login-form {
     width: 50vw;
-    margin: auto;
+    margin: 0 auto;
   }
 }
 

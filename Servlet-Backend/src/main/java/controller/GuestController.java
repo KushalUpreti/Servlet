@@ -1,7 +1,7 @@
 package controller;
 
-import dto.CategoryDTO;
-import dto.ItemDTO;
+import model.Category;
+import model.Item;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -47,7 +47,7 @@ public class GuestController extends HttpServlet {
         String requestType = request.getParameter("type");
         if (requestType.equals("category")) {
             try {
-                List<CategoryDTO> categories = categoryService.getAllCategories();
+                List<Category> categories = categoryService.getAllCategories();
                 HTTPUtils.sendResponse(response, categories);
             } catch (SQLException s) {
                 HTTPUtils.sendErrorResponse(response, 400, s.getMessage());
@@ -60,7 +60,7 @@ public class GuestController extends HttpServlet {
         int index = Integer.parseInt(request.getPathInfo().split("/")[2]);
 
         try {
-            ItemDTO item = itemService.getItem(index);
+            Item item = itemService.getItem(index);
             HTTPUtils.sendResponse(response, item);
         } catch (SQLException | ServletException s) {
             HTTPUtils.sendErrorResponse(response, 400, s.getMessage());

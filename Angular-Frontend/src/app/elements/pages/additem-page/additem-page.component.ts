@@ -22,6 +22,9 @@ export class AdditemPageComponent implements OnInit {
   message: string = 'Added Item';
   categories = [];
   selected = -1;
+  items = [];
+
+  myFiles: string[] = [];
 
   constructor(private readonly http: HttpClient) {}
 
@@ -31,16 +34,32 @@ export class AdditemPageComponent implements OnInit {
       .subscribe((categories) => {
         this.categories = categories;
       });
+
+    this.http
+      .get<any>(`http://localhost:8080/admin/item`)
+      .subscribe((items) => {
+        this.items = items;
+      });
+  }
+
+  onFileChange(event: any) {
+    for (let i = 0; i < event.target.files.length; i++) {
+      this.myFiles.push(event.target.files[i]);
+    }
   }
 
   addItem() {
+    const formData = new FormData();
+    formData.append('title', this.title);
+    formData.append('description', this.description);
+    formData.append('price', this.price.toString());
+
+    for (let i = 0; i < this.myFiles.length; i++) {
+      formData.append('images', this.myFiles[i]);
+    }
+
     this.http
-      .post<any>(`http://localhost:8080/admin/item`, {
-        title: this.title,
-        description: this.description,
-        price: this.price,
-        categoryId: +this.selected,
-      })
+      .post<any>(`http://localhost:8080/admin/item/${this.selected}`, formData)
       .subscribe((res) => {
         this.loadToast();
         this.itemForm.reset();

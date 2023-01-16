@@ -1,7 +1,7 @@
 package service;
 
 import com.google.gson.Gson;
-import dto.CategoryDTO;
+import model.Category;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import repository.CategoryRepository;
@@ -20,17 +20,17 @@ public class CategoryService {
         this.categoryRepository = new CategoryRepository();
     }
 
-    public List<CategoryDTO> getAllCategories() throws SQLException {
+    public List<Category> getAllCategories() throws SQLException {
         return categoryRepository.getAllCategories();
     }
 
     public void addCategory(HttpServletRequest request) throws ServletException, SQLException {
         String requestBody = HTTPUtils.jsonParser(request);
-        CategoryDTO categoryDTO = gson.fromJson(requestBody, CategoryDTO.class);
-        if (Validation.isEmpty(categoryDTO.getTitle())) {
+        Category category = gson.fromJson(requestBody, Category.class);
+        if (Validation.isEmpty(category.getTitle())) {
             throw new ServletException("Invalid category name");
         }
-        categoryRepository.addCategory(categoryDTO.getTitle());
+        categoryRepository.addCategory(category.getTitle());
     }
 
 }

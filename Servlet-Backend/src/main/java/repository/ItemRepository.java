@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
 import model.Category;
 import model.Item;
-import util.Constants;
+import db.DBConnection;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,24 +13,13 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemRepository {
-    Connection connection;
-
-    private void createConnection() {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            connection =
-                    DriverManager.getConnection("jdbc:mysql://localhost:3306/servlet", "root", Constants.env.get("MYSQL_PASS"));
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
+public class ItemRepository extends DBConnection {
+    
     public Item addItem(Item item) {
         createConnection();
         try {
             String sql = "Insert into items (title,description,price,category_id) VALUES (?,?,?,?)";
-            PreparedStatement prepareStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement prepareStatement = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             prepareStatement.setString(1, item.getTitle());
             prepareStatement.setString(2, item.getDescription());
             prepareStatement.setDouble(3, item.getPrice());
@@ -54,7 +43,7 @@ public class ItemRepository {
         Item item = null;
         try {
             String sql = "SELECT i.*,  c.title as category FROM servlet.categories c INNER JOIN servlet.items i ON c.id = i.category_id WHERE i.id = ?";
-            PreparedStatement prepareStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement prepareStatement = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             prepareStatement.setInt(1, itemId);
             ResultSet resultSet = prepareStatement.executeQuery();
 
@@ -80,7 +69,7 @@ public class ItemRepository {
         List<Item> items = new ArrayList<>();
         try {
             String sql = "SELECT i.*,  c.title as category FROM servlet.categories c INNER JOIN servlet.items i ON c.id = i.category_id";
-            Statement statement = connection.createStatement();
+            Statement statement = getConnection().createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
 
             while (resultSet.next()) {
@@ -110,7 +99,7 @@ public class ItemRepository {
         createConnection();
         String sql = "Insert into images (title,item_id) VALUES (?,?)";
         try {
-            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             for (String file : files) {
                 ps.setString(1, file);
                 ps.setInt(2, itemId);
@@ -135,7 +124,7 @@ public class ItemRepository {
         List<String> images = new ArrayList<>();
         try {
             String sql = "SELECT title FROM images WHERE item_id = ?";
-            PreparedStatement prepareStatement = connection.prepareStatement(sql);
+            PreparedStatement prepareStatement = getConnection().prepareStatement(sql);
             prepareStatement.setInt(1, itemId);
             ResultSet resultSet = prepareStatement.executeQuery();
 
@@ -154,7 +143,7 @@ public class ItemRepository {
         createConnection();
         try {
             String sql = "DELETE FROM items WHERE id = ?";
-            PreparedStatement prepareStatement = connection.prepareStatement(sql);
+            PreparedStatement prepareStatement = getConnection().prepareStatement(sql);
             prepareStatement.setInt(1, itemId);
             prepareStatement.executeUpdate();
         } catch (SQLException e) {
@@ -200,15 +189,5 @@ public class ItemRepository {
             }
         }
         return "";
-    }
-
-    private void terminateConnection() {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException exception) {
-                exception.printStackTrace();
-            }
-        }
     }
 }

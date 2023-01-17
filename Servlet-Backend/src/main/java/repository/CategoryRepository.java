@@ -1,27 +1,20 @@
 package repository;
 
+import db.DBConnection;
+import db.QueryBuilder;
 import model.Category;
 import model.Item;
-import util.Constants;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CategoryRepository {
-    Connection connection;
-
-    private void createConnection() {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            connection =
-                    DriverManager.getConnection("jdbc:mysql://localhost:3306/servlet", "root", Constants.env.get("MYSQL_PASS"));
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
-    }
+public class CategoryRepository extends DBConnection {
 
     public Category getCategory(int id) {
         createConnection();
@@ -29,7 +22,7 @@ public class CategoryRepository {
 
         try {
             String sql = "SELECT * FROM categories WHERE id = ?";
-            PreparedStatement prepareStatement = connection.prepareStatement(sql);
+            PreparedStatement prepareStatement = getConnection().prepareStatement(sql);
             prepareStatement.setInt(1, id);
             ResultSet resultSet = prepareStatement.executeQuery();
 
@@ -51,7 +44,7 @@ public class CategoryRepository {
         List<Category> categories = new ArrayList<>();
         try {
             String sql = "SELECT c.id as category_id, c.title as category, i.id as item_id, i.title, i.description, i.price FROM categories c LEFT JOIN items i ON c.id = i.category_id;";
-            Statement stmt = connection.createStatement();
+            Statement stmt = getConnection().createStatement();
             ResultSet resultSet = stmt.executeQuery(sql);
 
             Map<Integer, Category> categoryMap = new HashMap<>();
@@ -88,24 +81,15 @@ public class CategoryRepository {
     public void addCategory(String title) {
         createConnection();
         try {
-            String sql = "Insert into categories (title) VALUES (?)";
-            PreparedStatement prepareStatement = connection.prepareStatement(sql);
+            QueryBuilder queryBuilder = new QueryBuilder(getConnection());
+            PreparedStatement prepareStatement = queryBuilder.insert("categories", "title")
+                    .build();
             prepareStatement.setString(1, title);
             prepareStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             terminateConnection();
-        }
-    }
-
-    private void terminateConnection() {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException exception) {
-                exception.printStackTrace();
-            }
         }
     }
 }

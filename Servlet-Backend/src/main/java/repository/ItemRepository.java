@@ -112,7 +112,7 @@ public class ItemRepository {
         }
     }
 
-    public List<String> getImages(int itemId) throws SQLException {
+    public List<String> getImages(int itemId, String fileUploadPath) throws SQLException {
         createConnection();
         List<String> images = new ArrayList<>();
         String sql = "SELECT title FROM images WHERE item_id = ?";

@@ -36,11 +36,19 @@ aside {
       margin: 0;
     }
 
-    .mat-icon {
-      color: red;
-      &:hover {
-        color: black;
-        transition: all 0.3s ease;
+    button {
+      background: transparent;
+      border: none;
+      margin: 0;
+      padding: 0;
+      height: 25px;
+
+      .mat-icon {
+        color: red;
+        &:hover {
+          color: black;
+          transition: all 0.3s ease;
+        }
       }
     }
 

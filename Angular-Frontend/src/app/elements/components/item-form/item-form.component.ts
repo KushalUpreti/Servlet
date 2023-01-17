@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-declare var bootstrap: any;
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-additem-page',
-  templateUrl: './additem-page.component.html',
-  styleUrls: ['./additem-page.component.scss'],
+  selector: 'app-item-form',
+  templateUrl: './item-form.component.html',
+  styleUrls: ['./item-form.component.scss'],
 })
-export class AdditemPageComponent implements OnInit {
+export class ItemFormComponent {
   itemForm = new FormGroup({
     title: new FormControl('', [Validators.required]),
     description: new FormControl('', [Validators.required]),
@@ -19,14 +19,16 @@ export class AdditemPageComponent implements OnInit {
   title: string;
   description: string;
   price: number;
-  message: string = 'Added Item';
   categories = [];
   selected = -1;
   items = [];
 
   myFiles: string[] = [];
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(
+    private readonly http: HttpClient,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
     this.http
@@ -61,7 +63,6 @@ export class AdditemPageComponent implements OnInit {
     this.http
       .post<any>(`http://localhost:8080/admin/item/${this.selected}`, formData)
       .subscribe((res) => {
-        this.loadToast();
         this.itemForm.reset();
       });
   }
@@ -87,11 +88,5 @@ export class AdditemPageComponent implements OnInit {
       return 'Enter min price of 1';
     }
     return '';
-  }
-
-  loadToast(): void {
-    const toastLiveExample = document.getElementById('liveToast');
-    const toast = new bootstrap.Toast(toastLiveExample);
-    toast.show();
   }
 }

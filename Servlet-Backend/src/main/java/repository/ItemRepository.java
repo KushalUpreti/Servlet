@@ -112,7 +112,7 @@ public class ItemRepository {
         }
     }
 
-    public List<String> getImages(int itemId, String fileUploadPath) throws SQLException {
+    public List<String> getImages(int itemId) throws SQLException {
         createConnection();
         List<String> images = new ArrayList<>();
         String sql = "SELECT title FROM images WHERE item_id = ?";
@@ -123,7 +123,24 @@ public class ItemRepository {
         while (resultSet.next()) {
             images.add(resultSet.getString(1));
         }
+        terminateConnection();
         return images;
+    }
+
+    public boolean deleteItem(int itemId) {
+        createConnection();
+        try {
+            String sql = "DELETE FROM items WHERE id = ?";
+            PreparedStatement prepareStatement = connection.prepareStatement(sql);
+            prepareStatement.setInt(1, itemId);
+            prepareStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            terminateConnection();
+        }
+        return true;
     }
 
 
@@ -139,6 +156,21 @@ public class ItemRepository {
             }
         }
         return fileNames;
+    }
+
+    public boolean deleteFiles(String uploadFilePath, int itemId) {
+        List<String> images = null;
+        try {
+            images = new ArrayList<>(getImages(itemId));
+        } catch (SQLException s) {
+            s.printStackTrace();
+            return false;
+        }
+        for (String image : images) {
+            File file = new File(uploadFilePath + File.separator + image);
+            file.delete();
+        }
+        return true;
     }
 
     private String getFileName(Part part) {

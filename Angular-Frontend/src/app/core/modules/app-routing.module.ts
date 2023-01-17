@@ -23,9 +23,9 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'add-item',
+    path: 'admin-item',
     loadChildren: () =>
-      import('./additem-page.module').then((m) => m.AdditemPageModule),
+      import('./admin-item-page.module').then((m) => m.AdditemPageModule),
     canActivate: [AuthGuard, RoleGuard],
   },
   {

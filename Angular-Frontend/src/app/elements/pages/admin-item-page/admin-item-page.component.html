@@ -3,19 +3,24 @@
     <div><h4>Items</h4></div>
     <div class="item-list">
       <!-- Loops -->
-      <div class="item-wraper" *ngFor="let item of items">
+      <div
+        class="item-wraper"
+        *ngFor="let item of items"
+        (click)="changeMode('edit')"
+      >
         <div>
           <p>{{ item.title }}</p>
         </div>
 
-        <mat-icon
-          aria-hidden="false"
-          aria-label="Delete"
-          fontIcon="delete"
-        ></mat-icon>
+        <button (click)="deleteItem(item.id)">
+          <mat-icon aria-hidden="false" aria-label="Delete" fontIcon="delete">
+          </mat-icon>
+        </button>
       </div>
     </div>
-    <button mat-flat-button color="warn">Add Item</button>
+    <button mat-flat-button color="warn" (click)="changeMode('add')">
+      Add Item
+    </button>
   </aside>
 
   <div class="login-form">

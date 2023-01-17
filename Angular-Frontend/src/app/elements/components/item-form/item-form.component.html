@@ -1,0 +1,82 @@
+<section>
+  <div class="login-form">
+    <div class="login-container">
+      <h3>Add Item</h3>
+    </div>
+    <form
+      (ngSubmit)="addItem()"
+      enctype="multipart/form-data"
+      [formGroup]="itemForm"
+    >
+      <div class="form-group">
+        <mat-form-field class="login-input" appearance="fill">
+          <mat-label>Title</mat-label>
+          <input
+            matInput
+            [(ngModel)]="title"
+            placeholder="pat@example.com"
+            formControlName="title"
+            required
+          />
+          <mat-error *ngIf="itemForm.get('title').invalid">{{
+            getTitleErrorMessage()
+          }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="form-group">
+        <mat-form-field class="login-input" appearance="fill">
+          <mat-label>Description</mat-label>
+          <textarea
+            matInput
+            [(ngModel)]="description"
+            formControlName="description"
+            placeholder="Describe the item"
+          ></textarea>
+          <mat-error *ngIf="itemForm.get('description').invalid">{{
+            getDescErrorMessage()
+          }}</mat-error>
+        </mat-form-field>
+      </div>
+      <mat-form-field appearance="fill">
+        <mat-label>Select a category</mat-label>
+        <mat-select [(value)]="selected">
+          <mat-option
+            *ngFor="let category of categories"
+            value="{{ category.id }}"
+            >{{ category.title }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+      <div class="form-group">
+        <mat-form-field class="login-input" appearance="fill">
+          <mat-label>Price</mat-label>
+          <input
+            matInput
+            [(ngModel)]="price"
+            formControlName="price"
+            required
+            type="number"
+            min="1"
+          />
+          <mat-error *ngIf="itemForm.get('price').invalid">{{
+            getPriceErrorMessage()
+          }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="mb-3">
+        <label for="formFileMultiple" class="form-label"
+          >Item Images Upload</label
+        >
+        <input
+          class="form-control"
+          type="file"
+          id="formFileMultiple"
+          multiple
+          accept="image/png, image/gif, image/jpeg"
+          (change)="onFileChange($event)"
+        />
+      </div>
+      <button type="submit" class="btn btn-dark">Submit</button>
+    </form>
+  </div>
+</section>

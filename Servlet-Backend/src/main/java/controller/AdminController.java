@@ -1,12 +1,12 @@
 package controller;
 
-import model.Item;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.Item;
 import service.CategoryService;
 import service.ItemService;
 import util.HTTPUtils;
@@ -43,7 +43,7 @@ public class AdminController extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doDelete(req, resp);
+        deleteBranch(req, resp);
     }
 
     private void postBranch(HttpServletRequest request, HttpServletResponse response) throws ServletException {
@@ -65,6 +65,17 @@ public class AdminController extends HttpServlet {
             categoryPostEndPoint(request, response);
         } else if (urlSegment[2].equals("item")) {
             itemGetEndPoints(request, response);
+        }
+    }
+
+    private void deleteBranch(HttpServletRequest request, HttpServletResponse response) {
+        String path = request.getRequestURI();
+        String[] urlSegment = path.split("/");
+
+        if (urlSegment[2].equals("category")) {
+            categoryDeleteEndPoint(request, response);
+        } else if (urlSegment[2].equals("item")) {
+            itemDeleteEndPoint(request, response);
         }
     }
 
@@ -93,6 +104,25 @@ public class AdminController extends HttpServlet {
             HTTPUtils.sendResponse(response, items);
         } catch (SQLException exception) {
             HTTPUtils.sendErrorResponse(response, 400, exception.getMessage());
+        }
+    }
+
+    private void categoryDeleteEndPoint(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            categoryService.addCategory(request);
+        } catch (ServletException | SQLException s) {
+            HTTPUtils.sendErrorResponse(response, 400, s.getMessage());
+        }
+    }
+
+    private void itemDeleteEndPoint(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            boolean deleted = itemService.deleteItem(request);
+            if (deleted) {
+                HTTPUtils.sendResponse(response, "Item deleted successfully");
+            }
+        } catch (Exception s) {
+            HTTPUtils.sendErrorResponse(response, 400, s.getMessage());
         }
     }
 }

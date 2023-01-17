@@ -9,7 +9,6 @@ import util.HTTPUtils;
 import util.JWTUtils;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,14 +44,7 @@ public class RoleFilter implements Filter {
         final String jwtToken = (String) servletRequest.getAttribute("token");
         String email = jwtUtils.extractEmail(jwtToken);
         List<String> roles = null;
-
-        try {
-            roles = userService.getRolesByEmail(email);
-        } catch (SQLException s) {
-            s.printStackTrace();
-            HTTPUtils.sendErrorResponse(response, 403, "Error checking user privileges");
-            return;
-        }
+        roles = userService.getRolesByEmail(email);
         if (roles.size() == 0) {
             HTTPUtils.sendErrorResponse(response, 418, "No privileges assigned");
             return;

@@ -19,15 +19,20 @@ public class AuthRepository {
         }
     }
 
-    public void register(User user) throws SQLException {
+    public void register(User user) {
         createConnection();
-        String sql = "Insert into users (email,password) VALUES (?, ?)";
-        PreparedStatement prepareStatement = connection.prepareStatement(sql);
-        String passwordHash = HTTPUtils.encodePassword(user.getPassword());
-        prepareStatement.setString(1, user.getEmail());
-        prepareStatement.setString(2, passwordHash);
-        prepareStatement.executeUpdate();
-        terminateConnection();
+        try {
+            String sql = "Insert into users (email,password) VALUES (?, ?)";
+            PreparedStatement prepareStatement = connection.prepareStatement(sql);
+            String passwordHash = HTTPUtils.encodePassword(user.getPassword());
+            prepareStatement.setString(1, user.getEmail());
+            prepareStatement.setString(2, passwordHash);
+            prepareStatement.executeUpdate();
+        }catch (SQLException s){
+            s.printStackTrace();
+        }finally {
+            terminateConnection();
+        }
     }
 
     public User login(User userDTO) {

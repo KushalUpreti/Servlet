@@ -8,7 +8,6 @@ import model.Item;
 import repository.CategoryRepository;
 import repository.ItemRepository;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class ItemService {
@@ -38,7 +37,7 @@ public class ItemService {
         return addedItem;
     }
 
-    public Item getItem(HttpServletRequest request) throws SQLException, ServletException {
+    public Item getItem(HttpServletRequest request) throws ServletException {
         int itemId = Integer.parseInt(request.getPathInfo().split("/")[2]);
 
         Item item = itemRepository.getItem(itemId);
@@ -50,7 +49,7 @@ public class ItemService {
         return item;
     }
 
-    public List<Item> getAllItems() throws SQLException {
+    public List<Item> getAllItems() {
         List<Item> items = itemRepository.getAllItems();
         return items;
     }

@@ -1,14 +1,13 @@
 package service;
 
 import com.google.gson.Gson;
-import model.Category;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import model.Category;
 import repository.CategoryRepository;
 import util.HTTPUtils;
 import util.Validation;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class CategoryService {
@@ -20,11 +19,11 @@ public class CategoryService {
         this.categoryRepository = new CategoryRepository();
     }
 
-    public List<Category> getAllCategories() throws SQLException {
+    public List<Category> getAllCategories() {
         return categoryRepository.getAllCategories();
     }
 
-    public void addCategory(HttpServletRequest request) throws ServletException, SQLException {
+    public void addCategory(HttpServletRequest request) throws ServletException {
         String requestBody = HTTPUtils.jsonParser(request);
         Category category = gson.fromJson(requestBody, Category.class);
         if (Validation.isEmpty(category.getTitle())) {

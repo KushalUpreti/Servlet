@@ -2,16 +2,15 @@ package service;
 
 import com.google.gson.Gson;
 import dto.AuthResponseDTO;
-import model.User;
 import exception.ClientException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import model.User;
 import repository.AuthRepository;
 import util.HTTPUtils;
 import util.JWTUtils;
 import util.Validation;
 
-import java.sql.SQLException;
 import java.util.List;
 
 // TODO: Login SQL Exception handling
@@ -35,12 +34,7 @@ public class AuthService {
                 || Validation.isEmpty(user.getPassword())) {
             throw new ServletException("Email or password cannot be empty.");
         }
-        try {
-            authRepository.register(user);
-        } catch (SQLException s) {
-            throw new ClientException(403, s.getMessage());
-        }
-
+        authRepository.register(user);
     }
 
     public AuthResponseDTO login(HttpServletRequest request) throws ServletException, ClientException {
@@ -53,18 +47,13 @@ public class AuthService {
         }
         User user = authRepository.login(userDTO);
         if (user == null) {
-            throw new ServletException("User not found");
+            throw new ClientException(404, "User not found. Try again");
         }
         boolean passwordMatch = HTTPUtils.checkPasswordMatch(password, user.getPassword());
         if (!passwordMatch) {
             throw new ClientException(401, "Invalid credentials. Try again");
         }
-        List<String> roles = null;
-        try {
-            roles = userService.getRolesByEmail(userDTO.getEmail());
-        } catch (SQLException s) {
-            s.printStackTrace();
-        }
+        List<String> roles = userService.getRolesByEmail(userDTO.getEmail());
         String token = jwtUtils.generateToken(user.getEmail());
         return new AuthResponseDTO(user, token, roles);
     }

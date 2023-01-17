@@ -12,7 +12,6 @@ import service.ItemService;
 import util.HTTPUtils;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 //TODO: Consistent error handling
@@ -46,7 +45,7 @@ public class AdminController extends HttpServlet {
         deleteBranch(req, resp);
     }
 
-    private void postBranch(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    private void postBranch(HttpServletRequest request, HttpServletResponse response) {
         String path = request.getRequestURI();
         String[] urlSegment = path.split("/");
 
@@ -82,12 +81,12 @@ public class AdminController extends HttpServlet {
     private void categoryPostEndPoint(HttpServletRequest request, HttpServletResponse response) {
         try {
             categoryService.addCategory(request);
-        } catch (ServletException | SQLException s) {
+        } catch (ServletException s) {
             HTTPUtils.sendErrorResponse(response, 400, s.getMessage());
         }
     }
 
-    private void itemPostEndPoint(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    private void itemPostEndPoint(HttpServletRequest request, HttpServletResponse response) {
         try {
 
             Item item = itemService.addItem(request);
@@ -99,20 +98,12 @@ public class AdminController extends HttpServlet {
 
 
     private void itemGetEndPoints(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            List<Item> items = itemService.getAllItems();
-            HTTPUtils.sendResponse(response, items);
-        } catch (SQLException exception) {
-            HTTPUtils.sendErrorResponse(response, 400, exception.getMessage());
-        }
+        List<Item> items = itemService.getAllItems();
+        HTTPUtils.sendResponse(response, items);
     }
 
     private void categoryDeleteEndPoint(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            categoryService.addCategory(request);
-        } catch (ServletException | SQLException s) {
-            HTTPUtils.sendErrorResponse(response, 400, s.getMessage());
-        }
+
     }
 
     private void itemDeleteEndPoint(HttpServletRequest request, HttpServletResponse response) {

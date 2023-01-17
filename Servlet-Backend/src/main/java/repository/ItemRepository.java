@@ -26,59 +26,77 @@ public class ItemRepository {
         }
     }
 
-    public Item addItem(Item item) throws SQLException {
+    public Item addItem(Item item) {
         createConnection();
-        String sql = "Insert into items (title,description,price,category_id) VALUES (?,?,?,?)";
-        PreparedStatement prepareStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-        prepareStatement.setString(1, item.getTitle());
-        prepareStatement.setString(2, item.getDescription());
-        prepareStatement.setDouble(3, item.getPrice());
-        prepareStatement.setInt(4, item.getCategory().getId());
-        prepareStatement.executeUpdate();
+        try {
+            String sql = "Insert into items (title,description,price,category_id) VALUES (?,?,?,?)";
+            PreparedStatement prepareStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            prepareStatement.setString(1, item.getTitle());
+            prepareStatement.setString(2, item.getDescription());
+            prepareStatement.setDouble(3, item.getPrice());
+            prepareStatement.setInt(4, item.getCategory().getId());
+            prepareStatement.executeUpdate();
 
-        ResultSet generatedKeys = prepareStatement.getGeneratedKeys();
-        if (generatedKeys.next()) {
-            item.setId(generatedKeys.getInt(1));
+            ResultSet generatedKeys = prepareStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                item.setId(generatedKeys.getInt(1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            terminateConnection();
         }
-        terminateConnection();
         return item;
     }
 
-    public Item getItem(int itemId) throws SQLException {
+    public Item getItem(int itemId) {
         createConnection();
-        String sql = "SELECT i.*,  c.title as category FROM servlet.categories c INNER JOIN servlet.items i ON c.id = i.category_id WHERE i.id = ?";
-        PreparedStatement prepareStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-        prepareStatement.setInt(1, itemId);
-        ResultSet resultSet = prepareStatement.executeQuery();
         Item item = null;
-        while (resultSet.next()) {
-            int id = resultSet.getInt(1);
-            String title = resultSet.getString(2);
-            String description = resultSet.getString(3);
-            double price = resultSet.getDouble(4);
-            int categoryId = resultSet.getInt(5);
-            String category = resultSet.getString(6);
-            item = new Item(id, title, description, price, new Category(categoryId, category));
+        try {
+            String sql = "SELECT i.*,  c.title as category FROM servlet.categories c INNER JOIN servlet.items i ON c.id = i.category_id WHERE i.id = ?";
+            PreparedStatement prepareStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            prepareStatement.setInt(1, itemId);
+            ResultSet resultSet = prepareStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                String title = resultSet.getString(2);
+                String description = resultSet.getString(3);
+                double price = resultSet.getDouble(4);
+                int categoryId = resultSet.getInt(5);
+                String category = resultSet.getString(6);
+                item = new Item(id, title, description, price, new Category(categoryId, category));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            terminateConnection();
         }
         return item;
     }
 
-    public List<Item> getAllItems() throws SQLException {
+    public List<Item> getAllItems() {
         createConnection();
-        String sql = "SELECT i.*,  c.title as category FROM servlet.categories c INNER JOIN servlet.items i ON c.id = i.category_id";
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(sql);
-
         List<Item> items = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt(1);
-            String title = resultSet.getString(2);
-            String description = resultSet.getString(3);
-            double price = resultSet.getDouble(4);
-            int categoryId = resultSet.getInt(5);
-            String category = resultSet.getString(6);
-            Item item = new Item(id, title, description, price, new Category(categoryId, category));
-            items.add(item);
+        try {
+            String sql = "SELECT i.*,  c.title as category FROM servlet.categories c INNER JOIN servlet.items i ON c.id = i.category_id";
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                String title = resultSet.getString(2);
+                String description = resultSet.getString(3);
+                double price = resultSet.getDouble(4);
+                int categoryId = resultSet.getInt(5);
+                String category = resultSet.getString(6);
+                Item item = new Item(id, title, description, price, new Category(categoryId, category));
+                items.add(item);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            terminateConnection();
         }
         return items;
     }
@@ -112,18 +130,23 @@ public class ItemRepository {
         }
     }
 
-    public List<String> getImages(int itemId) throws SQLException {
+    public List<String> getImages(int itemId) {
         createConnection();
         List<String> images = new ArrayList<>();
-        String sql = "SELECT title FROM images WHERE item_id = ?";
-        PreparedStatement prepareStatement = connection.prepareStatement(sql);
-        prepareStatement.setInt(1, itemId);
-        ResultSet resultSet = prepareStatement.executeQuery();
+        try {
+            String sql = "SELECT title FROM images WHERE item_id = ?";
+            PreparedStatement prepareStatement = connection.prepareStatement(sql);
+            prepareStatement.setInt(1, itemId);
+            ResultSet resultSet = prepareStatement.executeQuery();
 
-        while (resultSet.next()) {
-            images.add(resultSet.getString(1));
+            while (resultSet.next()) {
+                images.add(resultSet.getString(1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            terminateConnection();
         }
-        terminateConnection();
         return images;
     }
 
@@ -160,12 +183,7 @@ public class ItemRepository {
 
     public boolean deleteFiles(String uploadFilePath, int itemId) {
         List<String> images = null;
-        try {
-            images = new ArrayList<>(getImages(itemId));
-        } catch (SQLException s) {
-            s.printStackTrace();
-            return false;
-        }
+        images = new ArrayList<>(getImages(itemId));
         for (String image : images) {
             File file = new File(uploadFilePath + File.separator + image);
             file.delete();

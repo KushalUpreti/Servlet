@@ -1,18 +1,17 @@
 package controller;
 
-import model.Category;
-import model.Item;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.Category;
+import model.Item;
 import service.CategoryService;
 import service.ItemService;
 import util.HTTPUtils;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 //TODO: Remove type dependency from url
@@ -32,7 +31,7 @@ public class GuestController extends HttpServlet {
         branch(request, response);
     }
 
-    private void branch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void branch(HttpServletRequest request, HttpServletResponse response) {
         String path = request.getRequestURI();
         String[] urlSegment = path.split("/");
 
@@ -43,23 +42,19 @@ public class GuestController extends HttpServlet {
         }
     }
 
-    private void categoryGetEndPoint(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void categoryGetEndPoint(HttpServletRequest request, HttpServletResponse response) {
         String requestType = request.getParameter("type");
         if (requestType.equals("category")) {
-            try {
-                List<Category> categories = categoryService.getAllCategories();
-                HTTPUtils.sendResponse(response, categories);
-            } catch (SQLException s) {
-                HTTPUtils.sendErrorResponse(response, 400, s.getMessage());
-            }
+            List<Category> categories = categoryService.getAllCategories();
+            HTTPUtils.sendResponse(response, categories);
         }
     }
 
-    private void itemGetEndPoint(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void itemGetEndPoint(HttpServletRequest request, HttpServletResponse response) {
         try {
             Item item = itemService.getItem(request);
             HTTPUtils.sendResponse(response, item);
-        } catch (SQLException | ServletException s) {
+        } catch (ServletException s) {
             HTTPUtils.sendErrorResponse(response, 400, s.getMessage());
         }
     }

@@ -33,9 +33,9 @@ public class ItemService {
         Item item = new Item(title, description, price);
         item.setCategory(category);
 
-        Item item2 = itemRepository.addItem(item);
-        itemRepository.addImages(request, item.getId());
-        return item2;
+        Item addedItem = itemRepository.addItem(item);
+        itemRepository.addImages(request, addedItem.getId());
+        return addedItem;
     }
 
     public Item getItem(HttpServletRequest request) throws SQLException, ServletException {

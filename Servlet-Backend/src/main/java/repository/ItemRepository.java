@@ -26,22 +26,22 @@ public class ItemRepository {
         }
     }
 
-    public Item addItem(Item dto) throws SQLException {
+    public Item addItem(Item item) throws SQLException {
         createConnection();
         String sql = "Insert into items (title,description,price,category_id) VALUES (?,?,?,?)";
         PreparedStatement prepareStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-        prepareStatement.setString(1, dto.getTitle());
-        prepareStatement.setString(2, dto.getDescription());
-        prepareStatement.setDouble(3, dto.getPrice());
-        prepareStatement.setInt(4, dto.getCategory().getId());
+        prepareStatement.setString(1, item.getTitle());
+        prepareStatement.setString(2, item.getDescription());
+        prepareStatement.setDouble(3, item.getPrice());
+        prepareStatement.setInt(4, item.getCategory().getId());
         prepareStatement.executeUpdate();
 
         ResultSet generatedKeys = prepareStatement.getGeneratedKeys();
         if (generatedKeys.next()) {
-            dto.setId(generatedKeys.getInt(1));
+            item.setId(generatedKeys.getInt(1));
         }
         terminateConnection();
-        return dto;
+        return item;
     }
 
     public Item getItem(int itemId) throws SQLException {

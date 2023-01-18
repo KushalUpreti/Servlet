@@ -3,6 +3,7 @@ package db;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class QueryBuilder {
     private final Connection conn;
@@ -53,6 +54,11 @@ public class QueryBuilder {
         return this;
     }
 
+    public QueryBuilder delete() {
+        query.append("DELETE");
+        return this;
+    }
+
     public QueryBuilder from(String table) {
         query.append(" FROM ").append(table);
         return this;
@@ -73,7 +79,7 @@ public class QueryBuilder {
     }
 
     public PreparedStatement build() throws SQLException {
-        stmt = conn.prepareStatement(query.toString());
+        stmt = conn.prepareStatement(query.toString(), Statement.RETURN_GENERATED_KEYS);
         return stmt;
     }
 }

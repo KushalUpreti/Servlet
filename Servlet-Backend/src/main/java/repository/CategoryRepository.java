@@ -19,10 +19,12 @@ public class CategoryRepository extends DBConnection {
     public Category getCategory(int id) {
         createConnection();
         Category category = null;
-
         try {
-            String sql = "SELECT * FROM categories WHERE id = ?";
-            PreparedStatement prepareStatement = getConnection().prepareStatement(sql);
+            QueryBuilder queryBuilder = new QueryBuilder(getConnection());
+            PreparedStatement prepareStatement = queryBuilder
+                    .select("*")
+                    .from("categories")
+                    .where("id", "=").build();
             prepareStatement.setInt(1, id);
             ResultSet resultSet = prepareStatement.executeQuery();
 

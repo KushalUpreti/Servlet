@@ -14,7 +14,6 @@ package util;
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 import java.io.UnsupportedEncodingException;
-
 import java.security.SecureRandom;
 
 /**

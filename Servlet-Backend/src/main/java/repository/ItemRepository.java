@@ -1,25 +1,31 @@
 package repository;
 
+import db.DBConnection;
+import db.QueryBuilder;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
 import model.Category;
 import model.Item;
-import db.DBConnection;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ItemRepository extends DBConnection {
-    
+
     public Item addItem(Item item) {
         createConnection();
         try {
-            String sql = "Insert into items (title,description,price,category_id) VALUES (?,?,?,?)";
-            PreparedStatement prepareStatement = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            QueryBuilder queryBuilder = new QueryBuilder(getConnection());
+            PreparedStatement prepareStatement = queryBuilder
+                    .insert("items", "title", "description", "price", "category_id")
+                    .build();
             prepareStatement.setString(1, item.getTitle());
             prepareStatement.setString(2, item.getDescription());
             prepareStatement.setDouble(3, item.getPrice());
@@ -92,14 +98,13 @@ public class ItemRepository extends DBConnection {
 
     public void addImages(HttpServletRequest request, int itemId) throws ServletException, IOException {
         ArrayList<String> files = writeFiles(request);
-        ArrayList<Integer> imageIdList = new ArrayList<>();
         if (files.size() == 0) {
             return;
         }
         createConnection();
-        String sql = "Insert into images (title,item_id) VALUES (?,?)";
         try {
-            PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            QueryBuilder queryBuilder = new QueryBuilder(getConnection());
+            PreparedStatement ps = queryBuilder.insert("images", "title", "item_id").build();
             for (String file : files) {
                 ps.setString(1, file);
                 ps.setInt(2, itemId);
@@ -107,11 +112,6 @@ public class ItemRepository extends DBConnection {
                 ps.clearParameters();
             }
             ps.executeBatch();
-
-            ResultSet generatedKeys = ps.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                imageIdList.add(generatedKeys.getInt(1));
-            }
         } catch (SQLException s) {
             s.printStackTrace();
         } finally {
@@ -123,8 +123,12 @@ public class ItemRepository extends DBConnection {
         createConnection();
         List<String> images = new ArrayList<>();
         try {
-            String sql = "SELECT title FROM images WHERE item_id = ?";
-            PreparedStatement prepareStatement = getConnection().prepareStatement(sql);
+            QueryBuilder queryBuilder = new QueryBuilder(getConnection());
+            PreparedStatement prepareStatement = queryBuilder
+                    .select("title")
+                    .from("images")
+                    .where("item_id", "=")
+                    .build();
             prepareStatement.setInt(1, itemId);
             ResultSet resultSet = prepareStatement.executeQuery();
 
@@ -142,8 +146,12 @@ public class ItemRepository extends DBConnection {
     public boolean deleteItem(int itemId) {
         createConnection();
         try {
-            String sql = "DELETE FROM items WHERE id = ?";
-            PreparedStatement prepareStatement = getConnection().prepareStatement(sql);
+            QueryBuilder queryBuilder = new QueryBuilder(getConnection());
+            PreparedStatement prepareStatement = queryBuilder
+                    .delete()
+                    .from("items")
+                    .where("id", "=")
+                    .build();
             prepareStatement.setInt(1, itemId);
             prepareStatement.executeUpdate();
         } catch (SQLException e) {

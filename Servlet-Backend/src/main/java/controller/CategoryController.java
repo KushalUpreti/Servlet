@@ -6,10 +6,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.CategoryService;
-import util.HTTPUtils;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 @WebServlet("/category")
 public class CategoryController extends HttpServlet {

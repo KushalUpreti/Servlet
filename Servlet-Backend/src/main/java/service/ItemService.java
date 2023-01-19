@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import model.Category;
+import model.Image;
 import model.Item;
 import repository.CategoryRepository;
 import repository.ItemRepository;
@@ -39,13 +40,12 @@ public class ItemService {
 
     public Item getItem(HttpServletRequest request) throws ServletException {
         int itemId = Integer.parseInt(request.getPathInfo().split("/")[2]);
-
         Item item = itemRepository.getItem(itemId);
-        List<String> images = itemRepository.getImages(itemId);
-        item.setImages(images);
         if (item == null) {
             throw new ServletException("Item not found");
         }
+        List<Image> images = itemRepository.getImages(itemId);
+        item.setImages(images);
         return item;
     }
 
@@ -61,5 +61,14 @@ public class ItemService {
             return false;
         }
         return itemRepository.deleteItem(itemId);
+    }
+
+    public boolean deleteImage(HttpServletRequest request) {
+        int imageId = Integer.parseInt(request.getPathInfo().split("/")[2]);
+        String uploadFilePath = request.getServletContext().getAttribute("FILES_DIR").toString();
+        if (!itemRepository.deleteFile(uploadFilePath, imageId)) {
+            return false;
+        }
+        return itemRepository.deleteImage(imageId);
     }
 }

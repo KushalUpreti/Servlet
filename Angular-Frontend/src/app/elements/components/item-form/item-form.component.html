@@ -1,10 +1,11 @@
 <section>
   <div class="login-form">
     <div class="login-container">
-      <h3>Add Item</h3>
+      <h3>{{ formType === "Add" ? "Add Item" : "Edit Item" }}</h3>
     </div>
     <form
       (ngSubmit)="addItem()"
+      f
       enctype="multipart/form-data"
       [formGroup]="itemForm"
     >
@@ -78,5 +79,17 @@
       </div>
       <button type="submit" class="btn btn-dark">Submit</button>
     </form>
+  </div>
+  <div *ngIf="formType === 'Edit' && !!item" class="image-list">
+    <h4>Images</h4>
+    <div *ngFor="let image of item.images" class="image-wrapper">
+      <img
+        src="http://localhost:8080/images/{{ image.title }}"
+        alt="{{ image.title }}"
+      />
+      <button mat-flat-button color="warn" (click)="deleteImage(image.id)">
+        Delete
+      </button>
+    </div>
   </div>
 </section>

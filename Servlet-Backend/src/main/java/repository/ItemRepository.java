@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
 import model.Category;
+import model.Image;
 import model.Item;
 
 import java.io.File;
@@ -119,13 +120,13 @@ public class ItemRepository extends DBConnection {
         }
     }
 
-    public List<String> getImages(int itemId) {
+    public List<Image> getImages(int itemId) {
         createConnection();
-        List<String> images = new ArrayList<>();
+        List<Image> images = new ArrayList<>();
         try {
             QueryBuilder queryBuilder = new QueryBuilder(getConnection());
             PreparedStatement prepareStatement = queryBuilder
-                    .select("title")
+                    .select("*")
                     .from("images")
                     .where("item_id", "=")
                     .build();
@@ -133,7 +134,7 @@ public class ItemRepository extends DBConnection {
             ResultSet resultSet = prepareStatement.executeQuery();
 
             while (resultSet.next()) {
-                images.add(resultSet.getString(1));
+                images.add(new Image(resultSet.getInt(1), resultSet.getString(2)));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -141,6 +142,30 @@ public class ItemRepository extends DBConnection {
             terminateConnection();
         }
         return images;
+    }
+
+    public Image getSingleImage(int imageId) {
+        createConnection();
+        Image image = null;
+        try {
+            QueryBuilder queryBuilder = new QueryBuilder(getConnection());
+            PreparedStatement prepareStatement = queryBuilder
+                    .select("*")
+                    .from("images")
+                    .where("id", "=")
+                    .build();
+            prepareStatement.setInt(1, imageId);
+            ResultSet resultSet = prepareStatement.executeQuery();
+
+            while (resultSet.next()) {
+                image = new Image(resultSet.getInt(1), resultSet.getString(2));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            terminateConnection();
+        }
+        return image;
     }
 
     public boolean deleteItem(int itemId) {
@@ -153,6 +178,26 @@ public class ItemRepository extends DBConnection {
                     .where("id", "=")
                     .build();
             prepareStatement.setInt(1, itemId);
+            prepareStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            terminateConnection();
+        }
+        return true;
+    }
+
+    public boolean deleteImage(int imageId) {
+        createConnection();
+        try {
+            QueryBuilder queryBuilder = new QueryBuilder(getConnection());
+            PreparedStatement prepareStatement = queryBuilder
+                    .delete()
+                    .from("images")
+                    .where("id", "=")
+                    .build();
+            prepareStatement.setInt(1, imageId);
             prepareStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -179,13 +224,19 @@ public class ItemRepository extends DBConnection {
     }
 
     public boolean deleteFiles(String uploadFilePath, int itemId) {
-        List<String> images = null;
+        List<Image> images = null;
         images = new ArrayList<>(getImages(itemId));
-        for (String image : images) {
-            File file = new File(uploadFilePath + File.separator + image);
+        for (Image image : images) {
+            File file = new File(uploadFilePath + File.separator + image.getTitle());
             file.delete();
         }
         return true;
+    }
+
+    public boolean deleteFile(String uploadFilePath, int imageId) {
+        Image image = getSingleImage(imageId);
+        File file = new File(uploadFilePath + File.separator + image.getTitle());
+        return file.delete();
     }
 
     private String getFileName(Part part) {

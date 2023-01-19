@@ -13,7 +13,6 @@ import util.Validation;
 
 import java.util.List;
 
-// TODO: Login SQL Exception handling
 public class AuthService {
     private final Gson gson;
     private final AuthRepository authRepository;
@@ -49,8 +48,7 @@ public class AuthService {
         if (user == null) {
             throw new ClientException(404, "User not found. Try again");
         }
-        boolean passwordMatch = HTTPUtils.checkPasswordMatch(password, user.getPassword());
-        if (!passwordMatch) {
+        if (!HTTPUtils.checkPasswordMatch(password, user.getPassword())) {
             throw new ClientException(401, "Invalid credentials. Try again");
         }
         List<String> roles = userService.getRolesByEmail(userDTO.getEmail());

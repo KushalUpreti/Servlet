@@ -8,7 +8,7 @@ public class Item {
     private String description;
     private double price;
     private Category category;
-    private List<String> images;
+    private List<Image> images;
 
     public Item(String title, String description, double price) {
         this.title = title;
@@ -66,11 +66,11 @@ public class Item {
         this.category = category;
     }
 
-    public List<String> getImages() {
+    public List<Image> getImages() {
         return images;
     }
 
-    public void setImages(List<String> images) {
+    public void setImages(List<Image> images) {
         this.images = images;
     }
 }

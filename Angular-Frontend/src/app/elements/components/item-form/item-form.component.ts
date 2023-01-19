@@ -1,14 +1,25 @@
-import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-item-form',
   templateUrl: './item-form.component.html',
   styleUrls: ['./item-form.component.scss'],
 })
-export class ItemFormComponent {
+export class ItemFormComponent implements OnChanges {
+  @Input() formType: string = '';
+  @Input() categories: any = [];
+  @Input() item: any = null;
+  @Output() submitEvent$ = new EventEmitter<FormData>();
+  @Output() deleteImageEvent$ = new EventEmitter<number>();
+
   itemForm = new FormGroup({
     title: new FormControl('', [Validators.required]),
     description: new FormControl('', [Validators.required]),
@@ -16,32 +27,25 @@ export class ItemFormComponent {
   });
 
   selectedFiles?: FileList;
-  title: string;
-  description: string;
-  price: number;
-  categories = [];
+  title: string = '';
+  description: string = '';
+  price: number = 1;
   selected = -1;
-  items = [];
-
   myFiles: string[] = [];
 
-  constructor(
-    private readonly http: HttpClient,
-    private readonly router: Router
-  ) {}
-
-  ngOnInit(): void {
-    this.http
-      .get<any>(`http://localhost:8080/guest/category?type=category`)
-      .subscribe((categories) => {
-        this.categories = categories;
-      });
-
-    this.http
-      .get<any>(`http://localhost:8080/admin/item`)
-      .subscribe((items) => {
-        this.items = items;
-      });
+  ngOnChanges(changes: SimpleChanges) {
+    const chng = changes['item'];
+    if (!chng) {
+      return;
+    }
+    const cur = chng.currentValue;
+    const prev = chng.previousValue;
+    if (!prev && cur) {
+      this.title = this.item.title;
+      this.description = this.item.description;
+      this.price = this.item.price;
+      this.selected = this.item.category.id;
+    }
   }
 
   onFileChange(event: any) {
@@ -55,16 +59,18 @@ export class ItemFormComponent {
     formData.append('title', this.title);
     formData.append('description', this.description);
     formData.append('price', this.price.toString());
+    formData.append('category', this.selected.toString());
 
     for (let i = 0; i < this.myFiles.length; i++) {
       formData.append('images', this.myFiles[i]);
     }
 
-    this.http
-      .post<any>(`http://localhost:8080/admin/item/${this.selected}`, formData)
-      .subscribe((res) => {
-        this.itemForm.reset();
-      });
+    this.submitEvent$.emit(formData);
+    this.itemForm.reset();
+  }
+
+  deleteImage(imageId: number) {
+    this.deleteImageEvent$.emit(imageId);
   }
 
   selectFiles(event: any): void {
@@ -77,12 +83,14 @@ export class ItemFormComponent {
     }
     return '';
   }
+
   getDescErrorMessage() {
     if (this.itemForm.get('description').hasError('required')) {
       return 'You must enter a value';
     }
     return '';
   }
+
   getPriceErrorMessage() {
     if (this.itemForm.get('price').hasError('min')) {
       return 'Enter min price of 1';

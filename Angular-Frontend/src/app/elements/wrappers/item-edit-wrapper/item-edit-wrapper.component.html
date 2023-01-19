@@ -1,0 +1,8 @@
+<app-item-form
+  [formType]="formType"
+  [categories]="categories"
+  (submitEvent$)="editItem($event)"
+  [item]="item"
+  (deleteImageEvent$)="deleteImage($event)"
+></app-item-form>
+<app-toast [message]="message"></app-toast>

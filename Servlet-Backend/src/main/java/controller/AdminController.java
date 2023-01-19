@@ -12,7 +12,6 @@ import service.ItemService;
 import util.HTTPUtils;
 
 import java.io.IOException;
-import java.util.List;
 
 //TODO: Consistent error handling
 @WebServlet("/admin/*")
@@ -75,6 +74,8 @@ public class AdminController extends HttpServlet {
             categoryDeleteEndPoint(request, response);
         } else if (urlSegment[2].equals("item")) {
             itemDeleteEndPoint(request, response);
+        } else if (urlSegment[2].equals("image")) {
+            imageDeleteEndPoint(request, response);
         }
     }
 
@@ -88,7 +89,6 @@ public class AdminController extends HttpServlet {
 
     private void itemPostEndPoint(HttpServletRequest request, HttpServletResponse response) {
         try {
-
             Item item = itemService.addItem(request);
             HTTPUtils.sendResponse(response, item);
         } catch (Exception exception) {
@@ -98,8 +98,7 @@ public class AdminController extends HttpServlet {
 
 
     private void itemGetEndPoints(HttpServletRequest request, HttpServletResponse response) {
-        List<Item> items = itemService.getAllItems();
-        HTTPUtils.sendResponse(response, items);
+        HTTPUtils.sendResponse(response, itemService.getAllItems());
     }
 
     private void categoryDeleteEndPoint(HttpServletRequest request, HttpServletResponse response) {
@@ -108,8 +107,17 @@ public class AdminController extends HttpServlet {
 
     private void itemDeleteEndPoint(HttpServletRequest request, HttpServletResponse response) {
         try {
-            boolean deleted = itemService.deleteItem(request);
-            if (deleted) {
+            if (itemService.deleteItem(request)) {
+                HTTPUtils.sendResponse(response, "Item deleted successfully");
+            }
+        } catch (Exception s) {
+            HTTPUtils.sendErrorResponse(response, 400, s.getMessage());
+        }
+    }
+
+    private void imageDeleteEndPoint(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            if (itemService.deleteImage(request)) {
                 HTTPUtils.sendResponse(response, "Item deleted successfully");
             }
         } catch (Exception s) {

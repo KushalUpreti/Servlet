@@ -24,6 +24,7 @@ export class ItemFormComponent implements OnChanges {
     title: new FormControl('', [Validators.required]),
     description: new FormControl('', [Validators.required]),
     price: new FormControl('', [Validators.min(1)]),
+    category: new FormControl('', [Validators.required]),
   });
 
   selectedFiles?: FileList;
@@ -52,6 +53,10 @@ export class ItemFormComponent implements OnChanges {
     for (let i = 0; i < event.target.files.length; i++) {
       this.myFiles.push(event.target.files[i]);
     }
+  }
+
+  onSelectChange($event: any) {
+    this.selected = +$event.value;
   }
 
   addItem() {

@@ -40,7 +40,10 @@
       </div>
       <mat-form-field appearance="fill">
         <mat-label>Select a category</mat-label>
-        <mat-select [(value)]="selected">
+        <mat-select
+          [value]="item && item.category.id.toString()"
+          (selectionChange)="onSelectChange($event)"
+        >
           <mat-option
             *ngFor="let category of categories"
             value="{{ category.id }}"

@@ -24,7 +24,9 @@ export class ItemEditWrapperComponent implements OnInit {
   }
 
   editItem(formData: FormData) {
-    alert('Edited Item');
+    this.http
+      .put<any>(`http://localhost:8080/admin/item/${this.item.id}`, formData)
+      .subscribe((item) => {});
   }
 
   getItemInfo() {

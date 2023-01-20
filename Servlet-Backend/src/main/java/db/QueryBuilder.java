@@ -64,8 +64,16 @@ public class QueryBuilder {
         return this;
     }
 
-    public QueryBuilder set(String column) {
-        query.append(column).append(" = ?");
+    public QueryBuilder set(String ...columns) {
+
+        for (int i = 0; i < columns.length; i++) {
+            if (i < columns.length - 1) {
+                query.append(columns[i]).append(" = ?, ");
+                continue;
+            }
+            query.append(columns[i]).append(" = ?");
+
+        }
         return this;
     }
 
@@ -81,5 +89,12 @@ public class QueryBuilder {
     public PreparedStatement build() throws SQLException {
         stmt = conn.prepareStatement(query.toString(), Statement.RETURN_GENERATED_KEYS);
         return stmt;
+    }
+
+    @Override
+    public String toString() {
+        return "QueryBuilder{" +
+                "query=" + query.toString() +
+                '}';
     }
 }

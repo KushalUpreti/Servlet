@@ -45,6 +45,34 @@ public class ItemRepository extends DBConnection {
         return item;
     }
 
+    public Item updateItem(Item item) {
+        createConnection();
+        try {
+            QueryBuilder queryBuilder = new QueryBuilder(getConnection());
+            PreparedStatement prepareStatement = queryBuilder
+                    .update("items")
+                    .set("title","description","price","category_id")
+                    .where("id", "=")
+                    .build();
+            prepareStatement.setString(1, item.getTitle());
+            prepareStatement.setString(2, item.getDescription());
+            prepareStatement.setDouble(3, item.getPrice());
+            prepareStatement.setInt(4, item.getCategory().getId());
+            prepareStatement.setInt(5, item.getId());
+            prepareStatement.executeUpdate();
+
+            ResultSet generatedKeys = prepareStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                item.setId(generatedKeys.getInt(1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            terminateConnection();
+        }
+        return item;
+    }
+
     public Item getItem(int itemId) {
         createConnection();
         Item item = null;

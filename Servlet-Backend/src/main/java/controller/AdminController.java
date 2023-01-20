@@ -23,7 +23,6 @@ public class AdminController extends HttpServlet {
     private final CategoryService categoryService;
     private final ItemService itemService;
 
-
     public AdminController() {
         this.categoryService = new CategoryService();
         this.itemService = new ItemService();
@@ -42,6 +41,21 @@ public class AdminController extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         deleteBranch(req, resp);
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String path = request.getRequestURI();
+        String[] urlSegment = path.split("/");
+
+        if (urlSegment[2].equals("category")) {
+        } else if (urlSegment[2].equals("item")) {
+            try {
+                HTTPUtils.sendResponse(response,itemService.updateItem(request));
+            } catch (ServletException s) {
+                HTTPUtils.sendErrorResponse(response, 400, s.getMessage());
+            }
+        }
     }
 
     private void postBranch(HttpServletRequest request, HttpServletResponse response) {

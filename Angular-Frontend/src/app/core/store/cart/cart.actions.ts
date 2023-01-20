@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { Item } from 'src/app/shared/interfaces/item.interface';
-import { Cart } from '../../../shared/interfaces/cart.interface';
+import { Cart, CartItem } from '../../../shared/interfaces/cart.interface';
 
 export const loadCart = createAction(
   '[Cart Component] Load Cart',
@@ -9,7 +9,7 @@ export const loadCart = createAction(
 
 export const addItemToCart = createAction(
   '[Cart Component] Add Cart Item',
-  props<Item>()
+  props<{ item: Item; count: number }>()
 );
 
 // export const addItemToRemote = createAction(
@@ -17,10 +17,10 @@ export const addItemToCart = createAction(
 //   props<CartItem>()
 // );
 
-// export const removeItemFromCart = createAction(
-//   '[Cart Component] Remove Cart Item',
-//   props<Cart>()
-// );
+export const removeItemFromCart = createAction(
+  '[Cart Component] Remove Cart Item',
+  props<Item>()
+);
 
 // export const removeItemFromRemote = createAction(
 //   '[Cart Component] Remove Cart Item Remote',

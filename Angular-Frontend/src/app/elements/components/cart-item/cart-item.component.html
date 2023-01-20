@@ -6,17 +6,15 @@
     />
   </div>
   <div class="text-wrapper">
-    <h5>{{ cartItem.title }}</h5>
-    <p>
-      Rs: <strong>{{ cartItem.price }}</strong>
-    </p>
-    <p>
-      Quantity: <strong>{{ cartItem.quantity }}</strong>
-    </p>
+    <a [routerLink]="['/item']" [queryParams]="{ id: cartItem.item.id }">
+      <h5 class="font-italic">{{ cartItem.item.title }}</h5></a
+    >
+    <p><strong>Rs:</strong> {{ cartItem.item.price }}</p>
+    <p><strong>Quantity:</strong> {{ cartItem.count }}</p>
     <button
       type="button"
       class="btn btn-danger"
-      (click)="onRemoveClick(cartItem.id)"
+      (click)="onRemoveClick(cartItem.item)"
     >
       Remove
     </button>

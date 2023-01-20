@@ -16,13 +16,12 @@ export const cartReducer = createReducer(
   on(CartActions.addItemToCart, (state, payload) => {
     const cartCopy: Cart = cloneDeep(state);
     const item = cartCopy.items.find(
-      (cartItem) => cartItem.item.id === payload.id
+      (cartItem) => cartItem.item.id === payload.item.id
     );
-
     if (!item) {
-      cartCopy.items.push({ item: payload, count: 1 });
+      cartCopy.items.push({ item: payload.item, count: 1 });
     } else {
-      item.count++;
+      item.count += payload.count;
     }
     setSavedState(cartCopy, '__user-cart__');
     return cartCopy;
@@ -30,12 +29,22 @@ export const cartReducer = createReducer(
   on(CartActions.loadCart, (state, payload) => {
     const cart: Cart = payload;
     return cart;
+  }),
+  on(CartActions.removeItemFromCart, (state, payload) => {
+    const cartCopy: Cart = cloneDeep(state);
+
+    const item = cartCopy.items.find((cartItem) => {
+      return cartItem.item.id === payload.id;
+    });
+    if (item.count === 1) {
+      cartCopy.items = cartCopy.items.filter(
+        (cartItem) => cartItem.item.id !== payload.id
+      );
+    } else {
+      item.count--;
+    }
+    return cartCopy;
   })
-  // on(CartActions.removeItemFromCart, (state, payload) => {
-  //   let prevCount = state.count;
-  //   const newCount: number = prevCount - payload.count;
-  //   return { ...state, count: newCount };
-  // }),
   // on(CartActions.resetCart, (state, payload) => {
   //   return { ...state, count: 0 };
   // })

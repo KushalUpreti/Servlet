@@ -3,7 +3,7 @@
   <div class="cart-control">
     <app-cart-itemlist
       [removeCartItem]="removeCartItem"
-      [cartItems]="cartItems"
+      [cartItems]="getCartItems()"
     ></app-cart-itemlist>
 
     <div class="order-summary-wrapper">
@@ -29,7 +29,7 @@
   <app-order-detail
     [accept]="accept"
     *ngIf="showModal"
-    [cartItems]="cartItems"
+    [cartItems]="getCartItems()"
     [getTotalPrice]="getTotalPrice"
     [getTotalQuantity]="getTotalQuantity"
   ></app-order-detail>

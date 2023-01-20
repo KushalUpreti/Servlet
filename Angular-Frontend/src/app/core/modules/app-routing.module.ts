@@ -20,7 +20,7 @@ const routes: Routes = [
     path: 'cart',
     loadChildren: () =>
       import('./cart-page.module').then((m) => m.CartPageModule),
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
   },
   {
     path: 'admin-item',

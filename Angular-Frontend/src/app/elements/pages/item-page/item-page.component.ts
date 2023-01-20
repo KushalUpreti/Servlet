@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { AuthService } from 'src/app/core/services/auth.service';
-// import { CartService } from 'src/app/core/services/cart.service';
+import { Item } from 'src/app/shared/interfaces/item.interface';
+import * as CartActions from '../../../core/store/cart/cart.actions';
 
 @Component({
   selector: 'app-item-page',
@@ -13,7 +15,8 @@ export class ItemPageComponent implements OnInit {
   constructor(
     private readonly http: HttpClient,
     private readonly router: Router,
-    private readonly authService: AuthService // private readonly cartService: CartService
+    private readonly authService: AuthService,
+    private readonly store: Store
   ) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
@@ -44,12 +47,7 @@ export class ItemPageComponent implements OnInit {
       });
   }
 
-  addToCart(itemId: number) {
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/login']);
-      return;
-    }
-    const userId = this.authService.getAuth().id;
-    // this.cartService.addItemToRemote(itemId, userId);
+  addToCart(item: Item) {
+    this.store.dispatch(CartActions.addItemToCart({ item, count: 1 }));
   }
 }

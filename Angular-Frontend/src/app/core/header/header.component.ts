@@ -46,8 +46,7 @@ export class HeaderComponent implements OnInit {
   }
 
   getCount(): number {
-    // return this.cartService.getCart() ? this.cartService.getCart().count : 0;
-    return 0;
+    return this.cartService.getTotalQuantity();
   }
 
   isAuthenticated(): boolean {

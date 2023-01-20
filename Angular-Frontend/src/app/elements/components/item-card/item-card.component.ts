@@ -20,6 +20,6 @@ export class ItemCardComponent {
   ) {}
 
   addToCart(item: Item) {
-    this.store.dispatch(CartActions.addItemToCart(item));
+    this.store.dispatch(CartActions.addItemToCart({ item, count: 1 }));
   }
 }

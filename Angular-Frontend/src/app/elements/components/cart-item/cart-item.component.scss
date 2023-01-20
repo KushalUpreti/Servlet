@@ -1,7 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap");
+
 .item-list-card {
   display: flex;
   gap: 12px;
-  //   padding: 0 3em;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  padding: 1em 2em;
+  font-family: "Roboto", sans-serif;
+
   .image-wrapper {
     width: 200px;
     height: 130px;

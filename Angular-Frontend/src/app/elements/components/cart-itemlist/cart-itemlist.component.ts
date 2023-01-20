@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Item } from 'src/app/shared/interfaces/item.interface';
 
 @Component({
   selector: 'app-cart-itemlist',
@@ -7,5 +8,5 @@ import { Component, Input } from '@angular/core';
 })
 export class CartItemlistComponent {
   @Input() cartItems: any = [];
-  @Input() removeCartItem: (cartItemId: number) => void;
+  @Input() removeCartItem: (item: Item) => void;
 }

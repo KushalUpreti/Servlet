@@ -14,9 +14,9 @@ import { CartService } from '../services/cart.service';
 export class HeaderComponent implements OnInit {
   constructor(
     private readonly authService: AuthService,
-    private readonly cartService: CartService,
     private readonly http: HttpClient,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly cartService: CartService
   ) {}
 
   categories: any = [];
@@ -46,7 +46,8 @@ export class HeaderComponent implements OnInit {
   }
 
   getCount(): number {
-    return this.cartService.getCart() ? this.cartService.getCart().count : 0;
+    // return this.cartService.getCart() ? this.cartService.getCart().count : 0;
+    return 0;
   }
 
   isAuthenticated(): boolean {

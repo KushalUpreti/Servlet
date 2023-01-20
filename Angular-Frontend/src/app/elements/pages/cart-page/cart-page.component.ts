@@ -3,10 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AuthService } from 'src/app/core/services/auth.service';
-import {
-  removeItemFromRemote,
-  resetCart,
-} from 'src/app/core/store/cart/cart.actions';
+// import // removeItemFromRemote,
+// // resetCart
+// 'src/app/core/store/cart/cart.actions';
 
 @Component({
   selector: 'app-cart-page',
@@ -37,7 +36,7 @@ export class CartPageComponent implements OnInit {
   }
 
   removeCartItem = (cartItemId: number) => {
-    this.store.dispatch(removeItemFromRemote({ cartItemId }));
+    // this.store.dispatch(removeItemFromRemote({ cartItemId }));
     let filteredList = this.cartItems.filter((item) => item.id !== cartItemId);
     this.cartItems = [...filteredList];
   };
@@ -67,7 +66,7 @@ export class CartPageComponent implements OnInit {
         {}
       )
       .subscribe(() => {
-        this.store.dispatch(resetCart({ count: 0 }));
+        // this.store.dispatch(resetCart({ count: 0 }));
         this.route.navigate(['/']);
       });
   };

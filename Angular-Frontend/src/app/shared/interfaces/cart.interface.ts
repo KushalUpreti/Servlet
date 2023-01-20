@@ -1,9 +1,10 @@
+import { Item } from './item.interface';
+
 export interface Cart {
-  count: number;
+  items: CartItem[];
 }
 
 export interface CartItem {
-  itemId: number;
-  userId: number;
-  quantity: number;
+  item: Item;
+  count: number;
 }

@@ -1,7 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { CartService } from 'src/app/core/services/cart.service';
+import { Item } from 'src/app/shared/interfaces/item.interface';
+import * as CartActions from '../../../core/store/cart/cart.actions';
 
 @Component({
   selector: 'app-item-card',
@@ -13,16 +15,11 @@ export class ItemCardComponent {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly cartService: CartService,
+    private readonly store: Store,
     private readonly router: Router
   ) {}
 
-  addToCart(itemId: number) {
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/login']);
-      return;
-    }
-    const userId = this.authService.getAuth().id;
-    this.cartService.addItemToRemote(itemId, userId);
+  addToCart(item: Item) {
+    this.store.dispatch(CartActions.addItemToCart(item));
   }
 }

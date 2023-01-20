@@ -13,7 +13,6 @@ import util.HTTPUtils;
 
 import java.io.IOException;
 
-//TODO: Consistent error handling
 @WebServlet("/admin/*")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024,
         maxFileSize = 1024 * 1024 * 5,
@@ -74,7 +73,6 @@ public class AdminController extends HttpServlet {
         String[] urlSegment = path.split("/");
 
         if (urlSegment[2].equals("category")) {
-            categoryPostEndPoint(request, response);
         } else if (urlSegment[2].equals("item")) {
             itemGetEndPoints(request, response);
         }

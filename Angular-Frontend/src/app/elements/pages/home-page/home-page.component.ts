@@ -36,10 +36,10 @@ export class HomePageComponent implements OnInit {
   constructor(private readonly http: HttpClient) {}
 
   ngOnInit(): void {
-    // this.http
-    //   .get<any>(`http://localhost:8080/api/guest/category/`)
-    //   .subscribe((categories) => {
-    //     this.categories = categories;
-    //   });
+    this.http
+      .get<any>(`http://localhost:8080/guest/category?type=category`)
+      .subscribe((categories) => {
+        this.categories = categories;
+      });
   }
 }

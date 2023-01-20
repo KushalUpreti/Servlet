@@ -52,23 +52,23 @@ public class CategoryRepository extends DBConnection {
             Map<Integer, Category> categoryMap = new HashMap<>();
             while (resultSet.next()) {
                 int categoryId = resultSet.getInt(1);
-                String category = resultSet.getString(2);
+                String categoryTitle = resultSet.getString(2);
                 int itemId = resultSet.getInt(3);
                 String itemTitle = resultSet.getString(4);
                 String itemDescription = resultSet.getString(5);
                 double itemPrice = resultSet.getDouble(6);
 
                 if (categoryMap.containsKey(categoryId)) {
-                    Category categoryDTO = categoryMap.get(categoryId);
+                    Category category = categoryMap.get(categoryId);
                     if (itemId != 0) {
-                        categoryDTO.getItems().add(new Item(itemId, itemTitle, itemDescription, itemPrice));
+                        category.getItems().add(new Item(itemId, itemTitle, itemDescription, itemPrice));
                     }
                 } else {
                     List<Item> list = new ArrayList<>();
                     if (itemId != 0) {
                         list.add(new Item(itemId, itemTitle, itemDescription, itemPrice));
                     }
-                    categoryMap.put(categoryId, new Category(categoryId, category, list));
+                    categoryMap.put(categoryId, new Category(categoryId, categoryTitle, list));
                 }
             }
             categories = new ArrayList<>(categoryMap.values());

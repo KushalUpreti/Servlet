@@ -16,7 +16,7 @@ export class AuthService {
         this.auth = auth;
       }
     });
-    const userAuth = JSON.parse(localStorage.getItem('userAuth'));
+    const userAuth = JSON.parse(localStorage.getItem('__user-auth__'));
     if (userAuth) {
       this.store.dispatch(AuthActions.setAuthCredentials(userAuth));
     }
@@ -33,6 +33,6 @@ export class AuthService {
   logout(): void {
     this.store.dispatch(AuthActions.deleteAuthCredentials());
     this.auth = null;
-    localStorage.removeItem('userAuth');
+    localStorage.removeItem('__user-auth__');
   }
 }

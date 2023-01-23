@@ -15,6 +15,8 @@ export class CartItemComponent implements OnInit {
 
   quantity: number = 0;
 
+  quantityForm = new FormControl('', [Validators.required, Validators.min(1)]);
+
   ngOnInit(): void {
     this.quantity = this.cartItem.count;
   }

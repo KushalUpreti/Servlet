@@ -34,12 +34,13 @@
       </button>
       <form>
         <input
+          matInput
           type="number"
           min="1"
           name="quantity"
           (change)="onCountChangeThroughText(cartItem.item)"
           [(ngModel)]="quantity"
-          [value]="quantity"
+          required
         />
       </form>
       <button

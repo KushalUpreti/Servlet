@@ -9,6 +9,7 @@ import { selectAuth } from '../store/auth/auth.selector';
 })
 export class AuthService {
   auth: Auth;
+  redirectUrl: string = '';
 
   constructor(private readonly store: Store) {
     store.pipe(select(selectAuth)).subscribe((auth) => {

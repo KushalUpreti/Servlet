@@ -17,7 +17,7 @@ export class JwtInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     const auth: Auth = this.authService.getAuth();
-    if (!!auth.token) {
+    if (auth && auth.token) {
       const tokenizedReq = req.clone({
         headers: req.headers.set('AUTHORIZATION', `Bearer ${auth.token}`),
       });

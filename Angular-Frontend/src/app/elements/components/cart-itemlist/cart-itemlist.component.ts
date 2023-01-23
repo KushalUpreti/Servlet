@@ -9,4 +9,5 @@ import { Item } from 'src/app/shared/interfaces/item.interface';
 export class CartItemlistComponent {
   @Input() cartItems: any = [];
   @Input() removeCartItem: (item: Item) => void;
+  @Input() udpateCartItem: (item: Item, count: number) => void;
 }

@@ -30,22 +30,33 @@ export const cartReducer = createReducer(
     const cart: Cart = payload;
     return cart;
   }),
+  on(CartActions.updateCartItem, (state, payload) => {
+    const cartCopy: Cart = cloneDeep(state);
+    const item = cartCopy.items.find(
+      (cartItem) => cartItem.item.id === payload.item.id
+    );
+    item.count = payload.count;
+    setSavedState(cartCopy, '__user-cart__');
+    return cartCopy;
+  }),
   on(CartActions.removeItemFromCart, (state, payload) => {
     const cartCopy: Cart = cloneDeep(state);
 
     const item = cartCopy.items.find((cartItem) => {
       return cartItem.item.id === payload.id;
     });
-    if (item.count === 1) {
-      cartCopy.items = cartCopy.items.filter(
-        (cartItem) => cartItem.item.id !== payload.id
-      );
-    } else {
-      item.count--;
-    }
+    // if (item.count === 1) {
+    cartCopy.items = cartCopy.items.filter(
+      (cartItem) => cartItem.item.id !== payload.id
+    );
+    // } else {
+    //   item.count--;
+    // }
+    setSavedState(cartCopy, '__user-cart__');
     return cartCopy;
+  }),
+  on(CartActions.resetCart, (state, payload) => {
+    setSavedState(cartInitialState, '__user-cart__');
+    return cartInitialState;
   })
-  // on(CartActions.resetCart, (state, payload) => {
-  //   return { ...state, count: 0 };
-  // })
 );

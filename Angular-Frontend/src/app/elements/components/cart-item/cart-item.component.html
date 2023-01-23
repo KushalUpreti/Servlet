@@ -6,17 +6,53 @@
     />
   </div>
   <div class="text-wrapper">
-    <a [routerLink]="['/item']" [queryParams]="{ id: cartItem.item.id }">
-      <h5 class="font-italic">{{ cartItem.item.title }}</h5></a
-    >
-    <p><strong>Rs:</strong> {{ cartItem.item.price }}</p>
-    <p><strong>Quantity:</strong> {{ cartItem.count }}</p>
-    <button
-      type="button"
-      class="btn btn-danger"
-      (click)="onRemoveClick(cartItem.item)"
-    >
-      Remove
-    </button>
+    <div>
+      <a [routerLink]="['/item']" [queryParams]="{ id: cartItem.item.id }">
+        <h5 class="font-italic">{{ cartItem.item.title }}</h5></a
+      >
+      <p><strong>Rs:</strong> {{ cartItem.item.price }}</p>
+
+      <button
+        type="button"
+        class="btn btn-danger remove"
+        (click)="onRemoveClick(cartItem.item)"
+      >
+        Remove
+      </button>
+    </div>
+    <div class="control-wrapper">
+      <button
+        class="btn btn-outline-dark btn-sm quantity-ctrl"
+        (click)="onSubtractClick(cartItem.item)"
+      >
+        <mat-icon
+          class="cart_icon"
+          aria-hidden="false"
+          aria-label="Remove"
+          fontIcon="remove"
+        ></mat-icon>
+      </button>
+      <form>
+        <input
+          type="number"
+          min="1"
+          name="quantity"
+          (change)="onCountChangeThroughText(cartItem.item)"
+          [(ngModel)]="quantity"
+          [value]="quantity"
+        />
+      </form>
+      <button
+        class="btn btn-outline-dark btn-sm quantity-ctrl"
+        (click)="onAddClick(cartItem.item)"
+      >
+        <mat-icon
+          class="cart_icon"
+          aria-hidden="false"
+          aria-label="Add"
+          fontIcon="add"
+        ></mat-icon>
+      </button>
+    </div>
   </div>
 </div>

@@ -40,6 +40,10 @@ export class CartPageComponent {
     return this.cartService.getTotalPrice();
   }
 
+  udpateCartItem = (item: Item, count: number) => {
+    this.store.dispatch(CartActions.updateCartItem({ item, count }));
+  };
+
   accept = () => {
     // this.http
     //   .post<any>(

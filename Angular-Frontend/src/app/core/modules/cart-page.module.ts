@@ -16,6 +16,6 @@ const routes: Routes = [{ path: '', component: CartPageComponent }];
     CartItemlistComponent,
     OrderDetailComponent,
   ],
-  imports: [CommonModule, RouterModule.forChild(routes)],
+  imports: [CommonModule, RouterModule.forChild(routes), SharedModule],
 })
 export class CartPageModule {}

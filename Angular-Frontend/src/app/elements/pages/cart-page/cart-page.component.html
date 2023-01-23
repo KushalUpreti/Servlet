@@ -4,6 +4,7 @@
     <app-cart-itemlist
       [removeCartItem]="removeCartItem"
       [cartItems]="getCartItems()"
+      [udpateCartItem]="udpateCartItem"
     ></app-cart-itemlist>
 
     <div class="order-summary-wrapper">
@@ -13,7 +14,7 @@
           Total Quantity: <strong>{{ getTotalQuantity() }}</strong>
         </p>
         <p>
-          Total Sum: <strong>Rs. {{ getTotalPrice() }}</strong>
+          Total Sum: <strong>Rs. {{ getTotalPrice().toFixed(2) }}</strong>
         </p>
       </div>
       <div class="button-container">

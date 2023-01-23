@@ -12,6 +12,11 @@ export const addItemToCart = createAction(
   props<{ item: Item; count: number }>()
 );
 
+export const updateCartItem = createAction(
+  '[Cart Component] Update Cart Item',
+  props<{ item: Item; count: number }>()
+);
+
 // export const addItemToRemote = createAction(
 //   '[Cart Component] Add Cart Item Remote',
 //   props<CartItem>()
@@ -27,7 +32,4 @@ export const removeItemFromCart = createAction(
 //   props<{ cartItemId: number }>()
 // );
 
-// export const resetCart = createAction(
-//   '[Cart Component] Reset Cart Item',
-//   props<Cart>()
-// );
+export const resetCart = createAction('[Cart Component] Reset Cart Item');
